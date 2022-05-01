@@ -1,7 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
+import rescue from './Rescue'
 
 function App() {
+
+  //fetch rescues here 
+  //login screen here for rescue ID
+  //show all rescues 
+    //filter rescues by location
+    //filter rescues by animal type
+    //update rescues to accepting volunteers, if yes, show them and have button linking to email 
   return (
     <div className="App">
       <header className="App-header">
