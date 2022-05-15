@@ -1,95 +1,25 @@
 import React, { useEffect, useState } from "react";
 import './App.css';
 import Rescue from './Components/Rescue' 
+import AddNewRescue from './Components/AddNewRescue'
 
 function App() {
  const [rescues, setRescues] = useState([])
  const [rescue, setRescue] = useState("")
  const [loggedOut, setLoggedOut] = useState(true);
-//  const [added, setAdded] = useState("");
  const [inputID, setInputID] = useState(0);
-
-// let name = "";
-//  const [id, setId] = useState(0)
+ const [add, setAdd] = useState(false)
+ const [name, setName] = useState("");
+ const [location, setLocation] = useState("")
  const [submitted, setSubmitted] = useState(false)
+ const [newRescue, setNewRescue] = useState({})
+
    useEffect(() => {
      fetch("http://localhost:9292/rescues")
       .then((r) => r.json())
       .then((rescuelist) => setRescues(rescuelist));
    }, []);
-    
-  //  function handleClick(e) {
-  //    rescues.map((r) => {
-  //      if (r.name === e.target.innerText) {
-  //        setRescue(r)
-  //        setSubmitted(true)
-  //        setLoggedOut(false)
-  //      }
-  //    })
-  //  }
 
-//    function handleName(e) {
-//     e.preventDefault();
-//     setAdded("")
-//     setRescue(e.target.parentElement.firstChild.nextSibling.value);
-//      if (inputname === "") {
-//          setAdded("false");
-//      }
-//       let findMatch = userData.find(listItem => listItem.name.toLowerCase() === inputname.toLowerCase()); 
-//               if (findMatch !== undefined) {
-//                  setUser(findMatch)
-//                  setLoggedOut(false);
-
-//               }
-//               else {
-//                   setAdded("mismatch")
-//               }       
-//  }
-//  function handleAdd(e) {
-//      e.preventDefault();
-//      setAdded("");
-    //  name = e.target.value;
-//  }
-
-//  function handleSubmit(e) {
-//      e.preventDefault();
-//       if (rescue === "") {
-//          setAdded("false")
-//       } 
-//       else {
-//          let idMatch = rescues.find(r => r.id === id); 
-//          if (idMatch === undefined) {
-//              fetch ("http://localhost:3000/users", {
-//              method: "POST",
-//              headers: {
-//              "Content-Type": "application/json",
-//                  },
-//                  body: JSON.stringify({
-//                  name,
-//                  workouts,
-//                  }),
-//              })
-//              .then((r) => r.json())
-//              setAdded("true");
-//              setLoggedOut(false);
-//              setUser({
-//                  "name": name, 
-//                  "workouts": [],
-//              }); 
-//          }
-//          else {
-//              setAdded("taken")
-//          }
-// function handleLogIn(e) {
-//   e.preventDefault();
-//   setInputID(e.target.value)
-//   rescues.map(r => {
-//     if (r.id === inputID) {
-//       setRescue(r)
-//       setLoggedOut(false)
-//     }
-//   })
-// }
 function handleLogIn(e) {
   e.preventDefault();
   setInputID(e.target.firstChild.nextSibling.value)
@@ -100,6 +30,18 @@ function handleLogIn(e) {
     }
   })
 }
+
+function handleShowAddForm(e) {
+  e.preventDefault();
+  setAdd(true);
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+  setSubmitted(true);
+  setNewRescue({name: name, location: location})
+}
+
    return (
     <div>
       My Animal Rescue App
@@ -122,65 +64,30 @@ function handleLogIn(e) {
                 ></input>                
                 <button>Enter</button> 
             </form>  */}
-            {rescue ? <Rescue rescue={rescue} /> : null}
-      {/* <ul>
-      {rescues.map((r) => (
-        <li key={r.id} onClick={handleClick}>{r.name}</li>
-        )) } 
-      </ul>
-      {submitted === true ? (
-      <Rescue rescue={rescue} />
-      ) : null }  */}
+            {rescue ? <Rescue rescue={rescue} 
+            // onRescueDelete={handleDeleteRescue}
+            // onUpdateRescue={handleUpdateRescue}
+            /> : null}
+          <button onClick={handleShowAddForm}>Add New Rescue</button>
+            { add ? <form onSubmit={handleSubmit}>
+                <input 
+                name="name" 
+                placeholder="Name" 
+                autoComplete="off" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)}/>
+                <input 
+                name="location" 
+                placeholder="Location" 
+                autoComplete="off" 
+                value={location} 
+                onChange={(e) => setLocation(e.target.value)}/>
+                <button>Submit</button>
+            </form> : null }
+            {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null}
+
     </div>
    );
-
-  //  function handleSubmit() {
-  //    rescues.map(r => {
-  //     if (r.id === id) {
-  //       setSubmitted(true)
-  //       setRescue(r)
-  //     }
-  //    })
-  //  }
-  //  function addNewRescue(e) {
-     //newRescue = input Obj
-    //post request to add to rescues db 
-    //setRescues([...rescues, newRescue])
-  //  }
-  //  function showRescues(e) {
-    //in html button, onClick, setShowAll to true
-    //in html, form w/ check boxes
-    //if e.target.value checked, filter
-    //for rescue list item, on name click brings up RescueCard
-  //  }
-
-  //   return (
-  //   <div className="App">
-  //     <form className="rescueId" onSubmit={handleSubmit}>
-  //       Rescue ID
-  //       <input 
-  //       type="text"
-  //       name="id"
-  //       value={body}
-  //       onChange={(e) => setId(e.target.value)}
-  //       />
-  //       <button type="submit">
-  //         Enter 
-  //       </button>
-  //     </form>
-  //     {submitted === true ? (
-  //     <Rescue>
-  //        rescue={rescue}
-  //     </Rescue>
-  //      ) : null }
-  //    <div>Add a New Rescue
-  //      <form>Add</form>
-  //    </div>
-  //    <div>Find a Rescue
-  //      <form>Filter By:</form>
-  //    </div>
-  //   </div>
-  // );
 }
 
 export default App;
