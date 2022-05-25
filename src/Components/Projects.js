@@ -1,40 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
+import Volunteers from "./Volunteers";
 
 function Projects({ rescue }) {
-let projArr = [];
-const [projects, setProjects] = useState([projArr])
+const [projects, setProjects] = useState([])
 const [project, setProject] = useState({})
-        rescue.animals.map(an => {
-                an.project_animals.map(projAn => projAn.projects.map(p => {
-                        if (!projArr.includes(p)) {
-                                projArr.push({title: p.title, id: p.id, proj_type: p.proj_type, created: p.created_at, updated: p.updated_at, proj_animal_id: p.project_animal_id, proj_volunteer_id: p.project_volunteer_id})
-                        }
-                }))
-      })     
+const [closed, setClosed] = useState(false)
+const [add, setAdd] = useState(false)
+const [newProject, setNewProject] = useState({})
+useEffect(() => {
+  fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
+  .then((r) => r.json())
+  .then((rescueProjects) => setProjects(rescueProjects));
+}, []);   
    function handleClick(e) {
             e.preventDefault();
-            projects[0].map(proj => {
+            projects.map(proj => {
                 if (proj.title === e.target.innerText) {
                     setProject(proj);
+                    setClosed(false);
+
                 }
             })
    }
+    function handleAdd(e) {
+        e.preventDefault();
+        setAdd(true);
+    }
+    function handleSubmit(e) {
+        e.preventDefault();
+        let newTitle = e.target.firstChild.value;
+        let newType = e.target.firstChild.nextSibling.value;
+       setNewProject({title: newTitle, type: newType}) 
+    }
       return (
         <div>
                 <p>Current Projects</p>
-                  {projects[0].map(p => 
+                  {projects.map(p => 
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
-                 {project.id === undefined ? null : <ProjectCard project={project} setProject={setProject} rescue={rescue} /> }
+                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} /> }
+                 <button onClick={handleAdd}>Add New Project</button>
+            { add ? <form onSubmit={handleSubmit}>
+                <input name="title" placeholder="Title"/>
+                <input name="type" placeholder="Type"/>
+                <button>Submit</button>
+            </form> : null }
+            <Volunteers rescue={rescue} />
+
         </div>
 )
-
 }
-   //option to add new, view & update/delete
-   //list all from projectanimals and projectvolunteers, remove duplicates
-        //new projectupdate component here - option to match & assign volunteer, list volunteers, sort by busiest
-        //option to add or remove a project animal or project volunteer from project 
-        //option to view closed projects
 export default Projects; 

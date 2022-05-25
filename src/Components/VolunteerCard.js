@@ -33,7 +33,7 @@ function VolunteerCard({ volunteer, setVolunteer, rescue }) {
        }
        setUpdatedVolunteer(volunteerUpdate);
        setClicked(false)
-       fetch(`http://localhost:9292/rescue/${rescue.id}/volunteers/${volunteer.id}`, {
+       fetch(`http://localhost:9292/volunteers/${volunteer.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,6 @@ function VolunteerCard({ volunteer, setVolunteer, rescue }) {
         .then((updatedVolunteer) => setVolunteer(updatedVolunteer));
          setSubmitted(true)
      }
-console.log(volunteer)
 function handleEdit(e){
     e.preventDefault();
  
@@ -67,7 +66,7 @@ return (
             <input name="location" defaultValue={volunteer.location} onChange={handleEdit}/> 
             <button>Submit</button>
         </form>
-        : null }
+        : null } 
         </div>
  )
 }

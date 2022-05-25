@@ -1,78 +1,59 @@
 import React, { useState } from "react";
 
-function AnimalCard({ rescue, animal, setAnimal }) {
+function AnimalCard({ animals, animal, setAnimal }) {
     const [updatedAnimal, setUpdatedAnimal] = useState({})
-    const [clicked, setClicked] = useState(false)
-    const [submitted, setSubmitted] = useState(false)
-    let newName = "";
-    let newSex = "";
-    let newColor = "";
-    let animalUpdate = {name: animal.name, sex: animal.sex, color: animal.color}
+    const [clickedUpdate, setClickedUpdate] = useState(false)
+    let animalUpdate = animal 
 
-   function handleUpdate(e){
+   function handleUpdateAnimal(e){
        e.preventDefault();
-       setClicked(true)
+       setClickedUpdate(true)
    }
-   function handleDelete(e){
+   function handleDeleteAnimal(e){
      e.preventDefault();
-       let id = e.target.parentElement.id
-       //delete request to animal/id
+        fetch(`http://localhost:9292/animals/${animal.id}`, {
+          method: "DELETE",
+        })
+          .then((r) => r.json())
+          .then((deletedAnimal) => console.log(deletedAnimal));
    }
-   function handleSubmitUpdate(e){
-       e.preventDefault();
-       if (newSex !== "") {
-           animalUpdate.sex = newSex
-       }
-       else {
-           animalUpdate.sex = animal.sex
-       }
-       if (newColor !== "") {
-          animalUpdate.color = newColor;
-       }
-       else {
-        animalUpdate.color = animal.color
-      }
-       if (newName !== "") {
-           animalUpdate.name = newName
-       }
-       else {
-        animalUpdate.color = animal.color
-      }
-      setUpdatedAnimal(animalUpdate);
-      setClicked(false)
-      fetch(`http://localhost:9292/rescue/${rescue.id}/animals/${animal.id}`, {
+   function handleSubmitUpdateAnimal(e){
+      e.preventDefault();
+      setClickedUpdate(false)
+      fetch(`http://localhost:9292/animals/${animal.id}`, {
           method: "PATCH",
           headers: {
               "Content-Type": "application/json",
           },
-          body: JSON.stringify(animalUpdate)
+          body: JSON.stringify({
+             updatedAnimal,
+          }),
       })
       .then((r) => r.json())
       .then((patchedAnimal) => setAnimal(patchedAnimal))
-
  }
    function handleEdit(e){
        e.preventDefault();
-
        if (e.target.name === "name") {
-           newName = e.target.value;
+        animalUpdate.name = e.target.value;
        }
        if (e.target.name === "sex") {
-           newSex = e.target.value;
+        animalUpdate.sex = e.target.value;
        }
        if (e.target.name === "color") {
-           newColor = e.target.value;
+        animalUpdate.color = e.target.value;
        }
+        setUpdatedAnimal(animalUpdate);
    }
 return (
         <div>
             <ul key={animal.id}>{animal.name}
                 <li>{animal.sex}</li>
                 <li>{animal.color}</li>
-                <button key="update" onClick={handleUpdate}>update</button>
-                <button key="delete" onClick={handleDelete}>delete</button>
+                <button key="update" onClick={handleUpdateAnimal}>update</button>
+                <button key="delete" onClick={handleDeleteAnimal}>delete</button>
             </ul>
-            { clicked ? <form onSubmit={handleSubmitUpdate}>
+            { clickedUpdate ? <form onSubmit={handleSubmitUpdateAnimal}>
                 <input name="name" defaultValue={animal.name} onChange={handleEdit}/> 
                 <input name="sex" defaultValue={animal.sex} onChange={handleEdit}/> 
                 <input name="color" defaultValue={animal.color} onChange={handleEdit} />

@@ -35,13 +35,11 @@ function handleShowAddForm(e) {
   e.preventDefault();
   setAdd(true);
 }
-
 function handleSubmit(e) {
   e.preventDefault();
   setSubmitted(true);
   setNewRescue({name: name, location: location})
 }
-
    return (
     <div>
       My Animal Rescue App
@@ -64,12 +62,12 @@ function handleSubmit(e) {
                 ></input>                
                 <button>Enter</button> 
             </form>  */}
-            {rescue ? <Rescue rescue={rescue} 
+            {rescue && !loggedOut ? <Rescue rescue={rescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut}
             // onRescueDelete={handleDeleteRescue}
             // onUpdateRescue={handleUpdateRescue}
             /> : null}
-          <button onClick={handleShowAddForm}>Add New Rescue</button>
-            { add ? <form onSubmit={handleSubmit}>
+          <button onClick={handleShowAddForm} style={{display: loggedOut ? 'visible' : 'none' }}>Add New Rescue</button>
+            { add ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
                 <input 
                 name="name" 
                 placeholder="Name" 

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Volunteers from "./Volunteers";
 import Animals from "./Animals";
 import Projects from "./Projects";
+import App from "../App";
 
-function Rescue({ rescue }) {
+function Rescue({ rescue, loggedOut, setLoggedOut }) {
     const [rescueinfo, setRescueinfo] = useState(null)
     const [projects, setProjects] = useState(null)
     const [clicked, setClicked] = useState("")
@@ -32,6 +33,10 @@ function Rescue({ rescue }) {
 //   });
 //   setRescues(updatedRescues);
 // }
+function handleLogOut(e) {
+    e.preventDefault();
+    setLoggedOut(true)
+}
     return (
         <div>
             Hello, {rescue.name}!
@@ -40,9 +45,12 @@ function Rescue({ rescue }) {
             <button onClick={handleClick}>Animals
             </button>
             <button onClick={handleClick}>Project Organizer</button>
+            <button onClick={handleLogOut} style={{display: loggedOut ? 'none' : 'visible' }}>Log Out</button>
             {clicked === "Volunteers" ? <Volunteers rescue={rescue}/> : null }
-            {clicked === "Animals" ? <Animals rescue={rescueinfo}/> : null }
-            {clicked === "Project Organizer" ? <Projects rescue={rescueinfo}/> : null }
+            {clicked === "Animals" ? <Animals rescue={rescue}/> : null }
+            {clicked === "Project Organizer" ? <Projects rescue={rescue}/> : null }
+            <br>
+            </br>
         </div>
        
     )

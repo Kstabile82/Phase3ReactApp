@@ -11,7 +11,6 @@ function AddNewRescue({ rescues, setRescues, newRescue }) {
         })
         .then((r) => r.json())
         .then(newAddition => console.log([...rescues, newAddition]));
-
         // .then(newAddition => setRescues([...rescues, newAddition]));
         
         return (
