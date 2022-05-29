@@ -1,72 +1,72 @@
 import React, { useState } from "react";
 
-function VolunteerCard({ volunteer, setVolunteer, rescue }) {
-    let proj = volunteer.project_volunteers
+function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, rescue }) {
     const [updatedVolunteer, setUpdatedVolunteer] = useState({})
-    const [clicked, setClicked] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    let newName = "";
-    let newLocation = "";
-    let  volunteerUpdate = {name: volunteer.name, location: volunteer.location}
+    const [clickedUpdate, setClickedUpdate] = useState(false)
+    let  volunteerUpdate = volunteer;
 
-    function handleUpdate(e) {
-        setClicked(true)
+    function handleUpdateVolunteer(e){
+        e.preventDefault();
+        setClickedUpdate(true)
     }
-    function handleDelete(e){
-        e.preventDefault();
-          let id = e.target.parentElement.id
-          //delete request to animal/id
-       }
-       function handleSubmitUpdate(e){
-        e.preventDefault();
-        if (newName !== "") {
-            volunteerUpdate.name = newName
-        }
-        else {
-            volunteerUpdate.name = volunteer.name
-        }
-        if (newLocation !== "") {
-           volunteerUpdate.location = newLocation;
-        }
-        else {
-         volunteerUpdate.location = volunteer.location;
-       }
-       setUpdatedVolunteer(volunteerUpdate);
-       setClicked(false)
+    function handleDeleteVolunteer(e){
+      e.preventDefault();
+         fetch(`http://localhost:9292/volunteers/${volunteer.id}`, {
+           method: "DELETE",
+         })
+           .then((r) => r.json())
+           .then((deletedVolunteer) => console.log(deletedVolunteer));
+    }
+    function handleSubmitUpdateVolunteer(e){
+       e.preventDefault();
+       setClickedUpdate(false)
        fetch(`http://localhost:9292/volunteers/${volunteer.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedVolunteer)
-      })
-        .then((r) => r.json())
-        .then((updatedVolunteer) => setVolunteer(updatedVolunteer));
-         setSubmitted(true)
-     }
-function handleEdit(e){
-    e.preventDefault();
- 
-    if (e.target.name === "name") {
-        newName = e.target.value;
+           method: "PATCH",
+           headers: {
+               "Content-Type": "application/json",
+           },
+           body: JSON.stringify({
+              updatedVolunteer,
+           }),
+       })
+       .then((r) => r.json())
+       .then((patchedVolunteer) => setVolunteer(patchedVolunteer))
+  }
+    function handleEdit(e){
+        e.preventDefault();
+        if (e.target.name === "name") {
+         volunteerUpdate.name = e.target.value;
+        }
+        if (e.target.name === "talents") {
+         volunteerUpdate.talents = e.target.value;
+        }
+        if (e.target.name === "location") {
+         volunteerUpdate.location = e.target.value;
+        }
+         setUpdatedVolunteer(volunteerUpdate);
     }
-    if (e.target.name === "location") {
-        newLocation = e.target.value;
+    function handleClose(e) {
+        e.preventDefault(); 
+        setClosedVol(true)
     }
- }
+
 return (
-        <div>
+        <div style={{display: closedVol ? 'none' : 'visible' }}>
             <ul key={volunteer.id}>{volunteer.name}
-                <li>{volunteer.location}</li>
-                <button key="update" onClick={handleUpdate}>update</button>
-                <button key="delete" onClick={handleDelete}>delete</button>
+                <div>{volunteer.location}</div>
+                <div>{volunteer.talents}</div>
+                <button key="update" onClick={handleUpdateVolunteer}>update</button>
+                <button key="delete" onClick={handleDeleteVolunteer}>delete</button>
+                <button onClick={handleClose}>close</button>
             </ul>
-            { clicked ? <form onSubmit={handleSubmitUpdate}>
-            <input name="name" defaultValue={volunteer.name} onChange={handleEdit}/> 
-            <input name="location" defaultValue={volunteer.location} onChange={handleEdit}/> 
-            <button>Submit</button>
-        </form>
-        : null } 
+            { clickedUpdate ? <form onSubmit={handleSubmitUpdateVolunteer}>
+                <input name="name" defaultValue={volunteer.name} onChange={handleEdit}/> 
+                <input name="talents" defaultValue={volunteer.talents} onChange={handleEdit}/> 
+                <input name="location" defaultValue={volunteer.location} onChange={handleEdit} />
+                <button>Submit</button>
+            </form>
+            : null }
         </div>
  )
 }

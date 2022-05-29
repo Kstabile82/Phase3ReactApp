@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AnimalCard({ animals, animal, setAnimal }) {
+function AnimalCard({ animals, animal, setAnimal, closedAnimal, setClosedAnimal }) {
     const [updatedAnimal, setUpdatedAnimal] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     let animalUpdate = animal 
@@ -43,13 +43,19 @@ function AnimalCard({ animals, animal, setAnimal }) {
        if (e.target.name === "color") {
         animalUpdate.color = e.target.value;
        }
+       if (e.target.name === "adopted") {
+        animalUpdate.adoption_status = e.target.value;
+       }
         setUpdatedAnimal(animalUpdate);
    }
 return (
         <div>
             <ul key={animal.id}>{animal.name}
-                <li>{animal.sex}</li>
-                <li>{animal.color}</li>
+                <div>{animal.sex}</div>
+                <div>{animal.color}</div>
+                {animal.adoption_status === true ? 
+                <div>Adopted</div> 
+                : <div>Adoptable</div>}
                 <button key="update" onClick={handleUpdateAnimal}>update</button>
                 <button key="delete" onClick={handleDeleteAnimal}>delete</button>
             </ul>
@@ -57,6 +63,11 @@ return (
                 <input name="name" defaultValue={animal.name} onChange={handleEdit}/> 
                 <input name="sex" defaultValue={animal.sex} onChange={handleEdit}/> 
                 <input name="color" defaultValue={animal.color} onChange={handleEdit} />
+                <select name="adopted" defaultValue={animal.adoption_status} onChange={handleEdit}>
+                    <option value="" hidden>Adopted</option>
+                     <option>Yes</option>
+                     <option>No</option>
+                </select>                
                 <button>Submit</button>
             </form>
             : null }

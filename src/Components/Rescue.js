@@ -46,7 +46,7 @@ function handleLogOut(e) {
             </button>
             <button onClick={handleClick}>Project Organizer</button>
             <button onClick={handleLogOut} style={{display: loggedOut ? 'none' : 'visible' }}>Log Out</button>
-            {clicked === "Volunteers" ? <Volunteers rescue={rescue}/> : null }
+            {clicked === "Volunteers" ? <Volunteers rescue={rescue} /> : null }
             {clicked === "Animals" ? <Animals rescue={rescue}/> : null }
             {clicked === "Project Organizer" ? <Projects rescue={rescue}/> : null }
             <br>

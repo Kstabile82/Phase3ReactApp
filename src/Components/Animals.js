@@ -5,13 +5,25 @@ function Animals({ rescue }) {
     const [animal, setAnimal] = useState({})
     const [add, setAdd] = useState(false)
     const [animals, setAnimals] = useState([])
+    const [closedAnimal, setClosedAnimal] = useState(false)
     const [displayedAnimals, setDisplayedAnimals] = useState(rescue.animals)
     const [checked, setChecked] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    const [sortAdopt, setSortAdopt] = useState(false)
     let filtertype;
     let filtersex; 
     let filterage;
+    let filteradopt;
+    const [filterType, setFilterType] = useState("")
+    const [filterSex, setFilterSex] = useState("")
+    const [filterAge, setFilterAge] = useState("")
+    const [filterAdopt, setFilterAdopt] = useState(false)
+    let animalMatchArray = []
+    let sexMatches = [];
+    let ageMatches;
+    let typeMatches;
+    let adoptMatches;
+    let breedMatches;
+
     useEffect(() => {
         fetch(`http://localhost:9292/rescues/${rescue.id}/animals`)
         .then((r) => r.json())
@@ -52,52 +64,84 @@ function Animals({ rescue }) {
     }    
     function handleChangeFilter(e) {
         e.preventDefault();
-          if (e.target.name === "type") {
+        if (e.target.name === "type") {
             filtertype = e.target.value;
+            setFilterType(filtertype)
         }
         if (e.target.name === "age") {
             filterage = e.target.value;
+            setFilterAge(filterage)
+        }
+        if (e.target.name === "adopted") {
+            if (e.target.value === "True") {
+                filteradopt = true
+            }
+            else if (e.target.value === "False") {
+                filteradopt = false
+            }
+            setFilterAdopt(filteradopt)
         }
         if (e.target.name === "sex") {
-            filtersex = e.target.value;
+            if (e.target.value === "F") {
+                filtersex = "Female"
+            }
+            else if (e.target.value === "M") {
+                filtersex = "Male"
+            }
+            setFilterSex(filtersex)
         }
+        setDisplayedAnimals(animals)
     } 
+    animalMatchArray = animals;
+
     function handleSubmitFilter(e) {
         e.preventDefault(); 
         setSubmitted(true);
-        // if (filtertype === "") {
-        //     filtertype = animal.kind
+       if (filterSex === undefined) { 
+            sexMatches = animalMatchArray; 
+        }
+        else {
+            sexMatches = animalMatchArray.filter(animal => animal.sex === filterSex)  
+        }
+      
+      adoptMatches = sexMatches.filter(an => an.adoption_status === filterAdopt)
+        console.log(adoptMatches)
+        if (filterAge === undefined) {
+            ageMatches = adoptMatches; 
+        }
+        else {
+            ageMatches = adoptMatches.filter(animal => animal.age === filterAge)
+        }
+        if (filterType === undefined) {
+            typeMatches = ageMatches; 
+        }
+        else {
+            typeMatches = ageMatches.filter(animal => animal.kind === filterType)
+        }
+        
+        // if (filterType === undefined) {
+        //     breedMatches = typeMatches; 
         // }
-        // if (filtersex === "") {
-        //     filtersex = animal.sex
+        // else {
+        //     breedMatches = typeMatches.filter(animal => animal.breed === filterBreed)
         // }
-        // if (filterage === "") {
-        //     filterage = animal.age
-        // }
-        setAnimals(animals.filter(animal => animal.kind === filtertype && animal.sex === filtersex && animal.age === filterage))
+        //add adoption status here instead of checkbox
+        setDisplayedAnimals(adoptMatches)
+        console.log(adoptMatches)
     }
   function sortAnimals(e) {
     setChecked(!checked)
     if (e.target.checked === true) {
-        animals.sort((a,b) => (a.created_at > b.created_at) ? -1 : 1)
+        displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? -1 : 1)
     }
     else { 
-        animals.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
+        displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
     }
   }
-  function sortAdoptables(e) {
-      setSortAdopt(!sortAdopt)
-      if (e.target.checked === true && sortAdopt === false) {
-        setDisplayedAnimals(animals.filter(a => a.adoption_status === "Adoptable"))
-
-      }
-      else {
-          setDisplayedAnimals(animals)
-      }
-  }
+  
 return (
         <div>
-            <p>Current Animals</p>
+            <p>All Animals</p>
             <div className="filter"> 
             Filter by:
             <br></br>
@@ -105,9 +149,6 @@ return (
              <input id="sortLongest" type="checkbox" onChange={sortAnimals} />
             </label>
             <br></br>
-            <label className="sortbyadoptables"> Adoptable
-             <input id="sortadoptable" type="checkbox" onChange={sortAdoptables} />
-            </label>
             <form onSubmit={handleSubmitFilter}>
             <select name="type" onChange={handleChangeFilter}>
                      <option value="" hidden>Type</option>
@@ -131,11 +172,16 @@ return (
                      <option>Senior</option>
                      <option>All</option>
                 </select>
+                <select name="adopted" onChange={handleChangeFilter}>
+                    <option value="" hidden>Adopted</option>
+                     <option>True</option>
+                     <option>False</option>
+                </select>
                 <button>Submit</button>
             </form>
             </div>
             {displayedAnimals.map(a => <li key={a.id} onClick={handleClick}>{a.name} </li>)}
-            {animal.id === undefined ? null : <AnimalCard animal={animal} setAnimal={setAnimal} animals={animals} /> }
+            {animal.id === undefined ? null : <AnimalCard animal={animal} setAnimal={setAnimal} animals={animals} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
             <button onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>

@@ -32,23 +32,25 @@ useEffect(() => {
         let newTitle = e.target.firstChild.value;
         let newType = e.target.firstChild.nextSibling.value;
        setNewProject({title: newTitle, type: newType}) 
+       setProjects([...projects, newProject])
+
     }
       return (
         <div>
-                <p>Current Projects</p>
+          <br></br>
+                <button onClick={handleAdd}>Add New Project</button>
+                { add ? <form onSubmit={handleSubmit}>
+                <input name="title" placeholder="Title"/>
+                <input name="type" placeholder="Type"/>
+                <button>Submit</button>
+            </form> : null }
+            <p>All Projects</p>
                   {projects.map(p => 
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
                  {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} /> }
-                 <button onClick={handleAdd}>Add New Project</button>
-            { add ? <form onSubmit={handleSubmit}>
-                <input name="title" placeholder="Title"/>
-                <input name="type" placeholder="Type"/>
-                <button>Submit</button>
-            </form> : null }
             <Volunteers rescue={rescue} />
-
         </div>
 )
 }
