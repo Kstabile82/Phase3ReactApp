@@ -4,10 +4,8 @@ import VolunteerCard from "./VolunteerCard";
 function Volunteers({ rescue }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
-    const [volunteers, setVolunteers] = useState([])
     const [closedVol, setClosedVol] = useState(false)
-
-
+    const [displayedVolunteers, setDisplayedVolunteers] = useState(rescue.volunteers)
     const [checked, setChecked] = useState(false)
     const [volSubmitted, setVolSubmitted] = useState(false)
     let filterlocation;
@@ -20,11 +18,12 @@ function Volunteers({ rescue }) {
 useEffect(() => {
   fetch(`http://localhost:9292/rescues/${rescue.id}/volunteers`)
   .then((r) => r.json())
-  .then((rescueVolunteers) => setVolunteers(rescueVolunteers));
+  .then((rescueVolunteers) => setDisplayedVolunteers(rescueVolunteers));
 }, []);   
+
    function handleClick(e) {
             e.preventDefault();
-            volunteers.map(vol => {
+            rescue.volunteers.map(vol => {
                 if (vol.name === e.target.innerText) {
                     setVolunteer(vol);
                     setClosedVol(false);
@@ -54,15 +53,16 @@ useEffect(() => {
          }),
          })
          .then((r) => r.json())
-         .then(newAdd => setVolunteers([...volunteers, newAdd]));    
+         .then(newAdd => setDisplayedVolunteers([...displayedVolunteers, newAdd]));    
      }    
      function onDeleteVolunteer(id) {
-        const updatedVolunteers = volunteers.filter((volunteer) => volunteer.id !== id);
-        setVolunteers(updatedVolunteers)
+        const updatedVolunteers = rescue.volunteers.filter((volunteer) => volunteer.id !== id);
+        setDisplayedVolunteers(updatedVolunteers)
        }
 
        function handleFilterVolChange(e) {
         e.preventDefault();
+        setDisplayedVolunteers(rescue.volunteers)
         if (e.target.name === "location") {
             filterlocation = e.target.value;
             setFilterLocation(filterlocation)
@@ -72,41 +72,40 @@ useEffect(() => {
             setFilterTalent(filtertalent)
         }
     } 
-    volMatchArray = volunteers;
+    volMatchArray = rescue.volunteers;
 
     function handleSubmitVolFilter(e) {
         e.preventDefault(); 
         setVolSubmitted(true);
-       if (filterLocation === undefined) { 
+       if (filterLocation === undefined || filterLocation === "All") { 
             locationMatches = volMatchArray; 
         }
         else {
             locationMatches = volMatchArray.filter(v => v.location === filterLocation)  
         }
-        if (filterTalent === undefined) {
+        if (filterTalent === undefined || filterTalent === "All") {
             talentMatches = locationMatches; 
         }
         else {
-            talentMatches = locationMatches.filter(v => v.talent === filterTalent)
+            talentMatches = locationMatches.filter(v => v.talents === filterTalent)
         }
-        setVolunteers(talentMatches)
+        setDisplayedVolunteers(talentMatches)
     }
   function sortVols(e) {
     setChecked(!checked)
     if (e.target.checked === true) {
-        volunteers.sort((a,b) => (a.created_at > b.created_at) ? -1 : 1)
+        displayedVolunteers.sort((a,b) => (a.project_volunteers.length > b.project_volunteers.length) ? -1 : 1)
     }
     else { 
-        volunteers.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
+        displayedVolunteers.sort((a,b) => (a.project_volunteers.length > b.project_volunteers.length) ? 1 : -1)
     }
 }
 return (
         <div>
-          <p>All Volunteers</p>
             <div className="filter"> 
             Filter by:
             <br></br>
-            <label className="sortbybusiness"> Projects (most to least) 
+            <label className="sortbybusiness"> Busiest (most to least) 
              <input id="sortBusiest" type="checkbox" onChange={sortVols} />
             </label>
             <br></br>
@@ -132,24 +131,25 @@ return (
                      <option>Rescuing</option>
                      <option>Event Management</option>
                      <option>Office Management</option>
+                     <option>All</option>
                 </select>
                 <button>Submit</button>
             </form>
             </div>
            <br></br>
-                <button onClick={handleAdd}>Add New Volunteer</button>
+            <p>All Volunteers</p>
+                  {displayedVolunteers.map(v => 
+                    <li key={v.id} onClick={handleClick}>{v.name}
+                    </li>
+                  )}
+                 {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} setVolunteer={setVolunteer} setClosedVol={setClosedVol} closedVol={closedVol} rescue={rescue} onDeleteVolunteer={onDeleteVolunteer} /> }
+                 <button onClick={handleAdd}>Add New Volunteer</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>
                 <input name="location" placeholder="Location"/>
                 <input name="talents" placeholder="Talents"/>
                 <button>Submit</button>
             </form> : null }
-            <p>All Volunteers</p>
-                  {volunteers.map(v => 
-                    <li key={v.id} onClick={handleClick}>{v.name}
-                    </li>
-                  )}
-                 {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} setVolunteer={setVolunteer} setClosedVol={setClosedVol} closedVol={closedVol} rescue={rescue} onDeleteVolunteer={onDeleteVolunteer} /> }
         </div>
 )
 }

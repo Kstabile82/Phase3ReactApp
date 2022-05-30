@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AnimalCard({ animals, animal, setAnimal, onDeleteAnimal, closedAnimal, setClosedAnimal }) {
+function AnimalCard({ animal, setAnimal, onDeleteAnimal, closedAnimal, setClosedAnimal }) {
     const [updatedAnimal, setUpdatedAnimal] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     let animalUpdate = animal 

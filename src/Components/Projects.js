@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
-import Volunteers from "./Volunteers";
 
 function Projects({ rescue }) {
-const [projects, setProjects] = useState([])
+const [displayedProjects, setDisplayedProjects] = useState([])
 const [project, setProject] = useState({})
 const [closed ,setClosed] = useState(false)
 const [add, setAdd] = useState(false)
+const [checked, setChecked] = useState(false)
+const [projectSubmitted, setProjectSubmitted] = useState(false)
+let filtertype;
+const [filterType, setFilterType] = useState("")
+let projMatchArray = []
+let typeMatches = [];
+
 useEffect(() => {
   fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
   .then((r) => r.json())
-  .then((rescueProjects) => setProjects(rescueProjects));
+  .then((rescueProjects) => setDisplayedProjects(rescueProjects));
 }, []);   
+
    function handleClick(e) {
             e.preventDefault();
-            projects.map(proj => {
+            rescue.projects.map(proj => {
                 if (proj.title === e.target.innerText) {
                     setProject(proj);
                     setClosed(false);
@@ -43,28 +50,80 @@ useEffect(() => {
           }),
           })
           .then((r) => r.json())
-          .then(newProj => setProjects([...projects, newProj])); 
+          .then(newProj => setDisplayedProjects([...rescue.projects, newProj])); 
     }
     function onDeleteProject(id) {
-      const updatedProjects = projects.filter((project) => project.id !== id);
-      setProjects(updatedProjects)
+      const updatedProjects = rescue.projects.filter((project) => project.id !== id);
+      setDisplayedProjects(updatedProjects)
      }
+
+     function handleFilterProjectChange(e) {
+      e.preventDefault();
+      setDisplayedProjects(rescue.projects)
+      if (e.target.name === "type") {
+          filtertype = e.target.value;
+          setFilterType(filtertype)
+      }
+  } 
+  projMatchArray = rescue.projects;
+
+  function handleSubmitProjectFilter(e) {
+      e.preventDefault(); 
+      setProjectSubmitted(true);
+     if (filterType === undefined || filterType === "All") { 
+          typeMatches = projMatchArray; 
+      }
+      else {
+          typeMatches = projMatchArray.filter(p => p.proj_type === filterType)  
+      }
+      setDisplayedProjects(typeMatches)
+  }
+function sortProjects(e) {
+  setChecked(!checked)
+  if (e.target.checked === true) {
+      displayedProjects.sort((a,b) => (a.created_at > b.created_at) ? -1 : 1)
+  }
+  else { 
+      displayedProjects.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
+  }
+}
       return (
         <div>
           <br></br>
-                <button onClick={handleAdd}>Add New Project</button>
+          <div className="filter"> 
+            Filter by:
+            <br></br>
+            <label className="sortbydate"> Newest to Oldest
+             <input id="sortdate" type="checkbox" onChange={sortProjects} />
+            </label>
+            <br></br>
+            <form onSubmit={handleSubmitProjectFilter}>
+            <select name="type" onChange={handleFilterProjectChange}>
+                     <option value="" hidden>Type</option>
+                     <option>Website</option>
+                     <option>Fundraiser</option>
+                     <option>Event</option>
+                     <option>Rescue Effort</option>
+                     <option>Social Media</option>
+                     <option>Adoption Screening</option>
+                     <option>Fostering</option>
+                     <option>All</option>
+                </select>
+                <button>Submit</button>
+            </form>
+            </div>
+            <p>All Projects</p>
+                  {displayedProjects.map(p => 
+                    <li key={p.id} onClick={handleClick}>{p.title}
+                    </li>
+                  )}
+                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} /> }
+                 <button onClick={handleAdd}>Add New Project</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="title" placeholder="Title"/>
                 <input name="type" placeholder="Type"/>
                 <button>Submit</button>
             </form> : null }
-            <p>All Projects</p>
-                  {projects.map(p => 
-                    <li key={p.id} onClick={handleClick}>{p.title}
-                    </li>
-                  )}
-                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} /> }
-            <Volunteers rescue={rescue} />
         </div>
 )
 }

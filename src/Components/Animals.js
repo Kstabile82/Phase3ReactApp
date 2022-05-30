@@ -4,7 +4,6 @@ import AnimalCard from "./AnimalCard";
 function Animals({ rescue }) {
     const [animal, setAnimal] = useState({})
     const [add, setAdd] = useState(false)
-    const [animals, setAnimals] = useState([])
     const [closedAnimal, setClosedAnimal] = useState(false)
     const [displayedAnimals, setDisplayedAnimals] = useState(rescue.animals)
     const [checked, setChecked] = useState(false)
@@ -31,7 +30,7 @@ function Animals({ rescue }) {
     }, []);
    function handleClick(e){
        e.preventDefault(); 
-       animals.map(a => {
+       rescue.animals.map(a => {
            if (a.name === e.target.innerText) {
                setAnimal(a);
                setClosedAnimal(false);
@@ -43,7 +42,7 @@ function Animals({ rescue }) {
        setAdd(true);
    }
    function onDeleteAnimal(id) {
-    const updatedAnimals = animals.filter((animal) => animal.id !== id);
+    const updatedAnimals = rescue.animals.filter((animal) => animal.id !== id);
     setDisplayedAnimals(updatedAnimals)
    }
    function handleSubmit(e) {
@@ -67,10 +66,11 @@ function Animals({ rescue }) {
         }),
         })
         .then((r) => r.json())
-        .then(newAdd => setDisplayedAnimals([...animals, newAdd]));  
+        .then(newAdd => setDisplayedAnimals([...displayedAnimals, newAdd]));  
     }    
     function handleChangeFilter(e) {
         e.preventDefault();
+        setDisplayedAnimals(rescue.animals)
         if (e.target.name === "type") {
             filtertype = e.target.value;
             setFilterType(filtertype)
@@ -98,25 +98,29 @@ function Animals({ rescue }) {
             setFilterSex(filtersex)
         }
     } 
-    animalMatchArray = animals;
+    animalMatchArray = rescue.animals;
     function handleSubmitFilter(e) {
         e.preventDefault(); 
         setSubmitted(true);
-       if (filterSex === undefined) { 
+       if (filterSex === undefined || filterSex === "All") { 
             sexMatches = animalMatchArray; 
         }
         else {
             sexMatches = animalMatchArray.filter(animal => animal.sex === filterSex)  
         }
-      
-      adoptMatches = sexMatches.filter(an => an.adoption_status === filterAdopt)
-        if (filterAge === undefined) {
+        if (filterAdopt === undefined || filterAdopt == "All") {
+            adoptMatches = sexMatches;
+        }
+        else {
+            adoptMatches = sexMatches.filter(an => an.adoption_status === filterAdopt)
+        }
+        if (filterAge === undefined || filterAge === "All") {
             ageMatches = adoptMatches; 
         }
         else {
             ageMatches = adoptMatches.filter(animal => animal.age === filterAge)
         }
-        if (filterType === undefined) {
+        if (filterType === undefined || filterType === "All") {
             typeMatches = ageMatches; 
         }
         else {
@@ -142,7 +146,6 @@ function Animals({ rescue }) {
 }
 return (
         <div>
-            <p>All Animals</p>
             <div className="filter"> 
             Filter by:
             <br></br>
@@ -177,12 +180,14 @@ return (
                     <option value="" hidden>Adopted</option>
                      <option>True</option>
                      <option>False</option>
+                     <option>All</option>
                 </select>
                 <button>Submit</button>
             </form>
             </div>
+            <p>All Animals</p>
             {displayedAnimals.map(a => <li key={a.id} onClick={handleClick}>{a.name} </li>)}
-            {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} animals={animals} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
+            {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
             <button onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>
