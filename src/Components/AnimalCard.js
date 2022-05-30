@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AnimalCard({ animals, animal, setAnimal, closedAnimal, setClosedAnimal }) {
+function AnimalCard({ animals, animal, setAnimal, onDeleteAnimal, closedAnimal, setClosedAnimal }) {
     const [updatedAnimal, setUpdatedAnimal] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     let animalUpdate = animal 
@@ -14,8 +14,7 @@ function AnimalCard({ animals, animal, setAnimal, closedAnimal, setClosedAnimal 
         fetch(`http://localhost:9292/animals/${animal.id}`, {
           method: "DELETE",
         })
-          .then((r) => r.json())
-          .then((deletedAnimal) => console.log(deletedAnimal));
+          onDeleteAnimal(animal.id);
    }
    function handleSubmitUpdateAnimal(e){
       e.preventDefault();
@@ -48,8 +47,12 @@ function AnimalCard({ animals, animal, setAnimal, closedAnimal, setClosedAnimal 
        }
         setUpdatedAnimal(animalUpdate);
    }
+   function handleCloseAnimal(e) {
+    e.preventDefault(); 
+    setClosedAnimal(true)
+}
 return (
-        <div>
+        <div style={{display: closedAnimal === true ? 'none' : 'visible' }}>
             <ul key={animal.id}>{animal.name}
                 <div>{animal.sex}</div>
                 <div>{animal.color}</div>
@@ -58,6 +61,7 @@ return (
                 : <div>Adoptable</div>}
                 <button key="update" onClick={handleUpdateAnimal}>update</button>
                 <button key="delete" onClick={handleDeleteAnimal}>delete</button>
+                <button onClick={handleCloseAnimal}>close</button>
             </ul>
             { clickedUpdate ? <form onSubmit={handleSubmitUpdateAnimal}>
                 <input name="name" defaultValue={animal.name} onChange={handleEdit}/> 

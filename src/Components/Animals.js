@@ -27,19 +27,24 @@ function Animals({ rescue }) {
     useEffect(() => {
         fetch(`http://localhost:9292/rescues/${rescue.id}/animals`)
         .then((r) => r.json())
-        .then((rescueAnimals) => setAnimals(rescueAnimals));
+        .then((rescueAnimals) => setDisplayedAnimals(rescueAnimals));
     }, []);
    function handleClick(e){
        e.preventDefault(); 
        animals.map(a => {
            if (a.name === e.target.innerText) {
                setAnimal(a);
+               setClosedAnimal(false);
            }
        })
    }
    function handleAdd(e) {
        e.preventDefault();
        setAdd(true);
+   }
+   function onDeleteAnimal(id) {
+    const updatedAnimals = animals.filter((animal) => animal.id !== id);
+    setDisplayedAnimals(updatedAnimals)
    }
    function handleSubmit(e) {
        e.preventDefault();
@@ -56,11 +61,13 @@ function Animals({ rescue }) {
             sex, 
             color,
             rescue_id: rescue.id, 
-            project_animals: []
+            project_animals: [],
+            adoption_status: false,
+            kind: "Rabbit"
         }),
         })
         .then((r) => r.json())
-        .then(newAdd => setAnimals([...animals, newAdd]));    
+        .then(newAdd => setDisplayedAnimals([...animals, newAdd]));  
     }    
     function handleChangeFilter(e) {
         e.preventDefault();
@@ -90,10 +97,8 @@ function Animals({ rescue }) {
             }
             setFilterSex(filtersex)
         }
-        setDisplayedAnimals(animals)
     } 
     animalMatchArray = animals;
-
     function handleSubmitFilter(e) {
         e.preventDefault(); 
         setSubmitted(true);
@@ -105,7 +110,6 @@ function Animals({ rescue }) {
         }
       
       adoptMatches = sexMatches.filter(an => an.adoption_status === filterAdopt)
-        console.log(adoptMatches)
         if (filterAge === undefined) {
             ageMatches = adoptMatches; 
         }
@@ -118,7 +122,6 @@ function Animals({ rescue }) {
         else {
             typeMatches = ageMatches.filter(animal => animal.kind === filterType)
         }
-        
         // if (filterType === undefined) {
         //     breedMatches = typeMatches; 
         // }
@@ -127,7 +130,6 @@ function Animals({ rescue }) {
         // }
         //add adoption status here instead of checkbox
         setDisplayedAnimals(adoptMatches)
-        console.log(adoptMatches)
     }
   function sortAnimals(e) {
     setChecked(!checked)
@@ -137,8 +139,7 @@ function Animals({ rescue }) {
     else { 
         displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
     }
-  }
-  
+}
 return (
         <div>
             <p>All Animals</p>
@@ -181,7 +182,7 @@ return (
             </form>
             </div>
             {displayedAnimals.map(a => <li key={a.id} onClick={handleClick}>{a.name} </li>)}
-            {animal.id === undefined ? null : <AnimalCard animal={animal} setAnimal={setAnimal} animals={animals} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
+            {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} animals={animals} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
             <button onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>

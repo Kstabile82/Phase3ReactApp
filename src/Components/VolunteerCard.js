@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, rescue }) {
+function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, onDeleteVolunteer, rescue }) {
     const [updatedVolunteer, setUpdatedVolunteer] = useState({})
     const [submitted, setSubmitted] = useState(false)
     const [clickedUpdate, setClickedUpdate] = useState(false)
@@ -12,12 +12,12 @@ function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, rescu
     }
     function handleDeleteVolunteer(e){
       e.preventDefault();
-         fetch(`http://localhost:9292/volunteers/${volunteer.id}`, {
-           method: "DELETE",
-         })
-           .then((r) => r.json())
-           .then((deletedVolunteer) => console.log(deletedVolunteer));
+      fetch(`http://localhost:9292/volunteers/${volunteer.id}`, {
+        method: "DELETE",
+      })
+          onDeleteVolunteer(volunteer.id);
     }
+    
     function handleSubmitUpdateVolunteer(e){
        e.preventDefault();
        setClickedUpdate(false)
@@ -50,7 +50,6 @@ function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, rescu
         e.preventDefault(); 
         setClosedVol(true)
     }
-
 return (
         <div style={{display: closedVol ? 'none' : 'visible' }}>
             <ul key={volunteer.id}>{volunteer.name}

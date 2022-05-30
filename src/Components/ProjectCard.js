@@ -1,12 +1,9 @@
 
 import React, { useState } from "react";
 
-function ProjectCard({ project, setProject, setClosed, closed, rescue }) {
+function ProjectCard({ project, setProject, setClosed, closed, rescue, onDeleteProject }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
-    const [submitted, setSubmitted] = useState(false)
-    const [animals, setAnimals] = useState(rescue.animals)
-    const [volunteers, setVolunteers] = useState(rescue.volunteers)
     let projectUpdate = project;
 
 function handleUpdateProject(e){
@@ -18,13 +15,12 @@ function handleDeleteProject(e){
     fetch(`http://localhost:9292/projects/${project.id}`, {
       method: "DELETE",
     })
-      .then((r) => r.json())
-      .then((deletedProject) => console.log(deletedProject));
+        onDeleteProject(project.id);
 }
 function handleSubmitUpdateProject(e){
   e.preventDefault();
   setClickedUpdate(false)
-  fetch(`http://localhost:9292/project/${project.id}`, {
+  fetch(`http://localhost:9292/projects/${project.id}`, {
       method: "PATCH",
       headers: {
           "Content-Type": "application/json",
@@ -40,6 +36,9 @@ function handleEdit(e){
    e.preventDefault();
    if (e.target.name === "title") {
     projectUpdate.title = e.target.value;
+   }
+   if (e.target.name === "type") {
+    projectUpdate.proj_type = e.target.value;
    }
     setUpdatedProject(projectUpdate);
 }
@@ -60,7 +59,8 @@ return (
                 <button onClick={handleClose}>close</button>
             </ul>
             { clickedUpdate ? <form onSubmit={handleSubmitUpdateProject}>
-                <input name="title" defaultValue={project.title} onChange={handleEdit}/> 
+                <input name="title" defaultValue={project.title} onChange={handleEdit}/>
+                <input name="type" defaultValue={project.proj_type} onChange={handleEdit}/>  
                 <button>Submit</button>
             </form>
             : null }

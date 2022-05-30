@@ -5,9 +5,8 @@ import Volunteers from "./Volunteers";
 function Projects({ rescue }) {
 const [projects, setProjects] = useState([])
 const [project, setProject] = useState({})
-const [closed, setClosed] = useState(false)
+const [closed ,setClosed] = useState(false)
 const [add, setAdd] = useState(false)
-const [newProject, setNewProject] = useState({})
 useEffect(() => {
   fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
   .then((r) => r.json())
@@ -19,7 +18,6 @@ useEffect(() => {
                 if (proj.title === e.target.innerText) {
                     setProject(proj);
                     setClosed(false);
-
                 }
             })
    }
@@ -29,12 +27,28 @@ useEffect(() => {
     }
     function handleSubmit(e) {
         e.preventDefault();
-        let newTitle = e.target.firstChild.value;
-        let newType = e.target.firstChild.nextSibling.value;
-       setNewProject({title: newTitle, type: newType}) 
-       setProjects([...projects, newProject])
-
+        let title = e.target.firstChild.value;
+        let proj_type = e.target.firstChild.nextSibling.value;
+        fetch(`http://localhost:9292/projects`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify ({
+              title,
+              proj_type, 
+              rescue_id: rescue.id, 
+              project_animals: [],
+              project_volunteers: []
+          }),
+          })
+          .then((r) => r.json())
+          .then(newProj => setProjects([...projects, newProj])); 
     }
+    function onDeleteProject(id) {
+      const updatedProjects = projects.filter((project) => project.id !== id);
+      setProjects(updatedProjects)
+     }
       return (
         <div>
           <br></br>
@@ -49,7 +63,7 @@ useEffect(() => {
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
-                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} /> }
+                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} /> }
             <Volunteers rescue={rescue} />
         </div>
 )
