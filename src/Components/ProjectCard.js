@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 import AnimalCard from "./AnimalCard";
+import Animals from "./Animals";
 
 
 function ProjectCard({ project, setProject, setClosed, closed, rescue, onDeleteProject }) {
@@ -9,6 +10,7 @@ function ProjectCard({ project, setProject, setClosed, closed, rescue, onDeleteP
     const [clickedUpdate, setClickedUpdate] = useState(false)
     const [projVolunteers, setProjVolunteers] = useState(project.project_volunteers);
     const [projAnimals, setProjAnimals] = useState(project.project_animals);
+    const [assignNew, setAssignNew] = useState("")
     let projectUpdate = project;
     let volArr; 
     let animalArr;
@@ -58,13 +60,18 @@ function handleEdit(e){
  function handleClose(e) {
      e.preventDefault(); 
      setClosed(true)
+     setAssignNew("")
  }
  function handleDeletePV(e) {
      e.preventDefault();
      //delete pv
     let vo = rescue.volunteers.find(v => v.name + " -" === e.target.parentElement.innerText)
     let projVolDelete = projVolunteers.find(pv => pv.volunteer_id === vo.id)
-    console.log(projVolDelete)
+}
+function handleAssignAnimal(e) {
+    e.preventDefault();
+    setAssignNew("Animal")
+
 }
 return (
         <div style={{display: closed === true ? 'none' : 'visible' }}>
@@ -77,7 +84,8 @@ return (
                 <div>Created: {project.created_at}</div>
                 <div>Updated: {project.updated_at}</div>
                 <div>Project Animals: {projAnimals.map(pa => pa.project_id === project.id ? rescue.animals.map(ra => ra.id === pa.animal_id ? <div><li>{ra.name}</li> {clickedUpdate ? <button>-</button> : null} </div>: null) : null)}
-                </div> {clickedUpdate ? <button>Assign New</button> : null}
+                </div> {clickedUpdate ? <button onClick={handleAssignAnimal}>Assign New</button> : null}
+                {assignNew === "Animal" ? <Animals rescue={rescue} assignNew={assignNew} setAssignNew={setAssignNew} project={project}/> : null}
                 <div>Project Volunteers: {projVolunteers.map(pv => pv.project_id === project.id ? rescue.volunteers.map(rv => rv.id === pv.volunteer_id ? <li>{rv.name}</li> : null) : null)}
                 </div>                
                 {!clickedUpdate ? <button key="update" onClick={handleUpdateProject}>update</button> : null}

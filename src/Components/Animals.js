@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
 
-function Animals({ rescue }) {
+function Animals({ rescue, assignNew, setAssignNew, project }) {
     const [animal, setAnimal] = useState({})
     const [add, setAdd] = useState(false)
     const [closedAnimal, setClosedAnimal] = useState(false)
@@ -28,14 +28,16 @@ function Animals({ rescue }) {
         .then((r) => r.json())
         .then((rescueAnimals) => setDisplayedAnimals(rescueAnimals));
     }, []);
-   function handleClick(e){
-       e.preventDefault(); 
-       rescue.animals.map(a => {
-           if (a.name === e.target.innerText) {
-               setAnimal(a);
-               setClosedAnimal(false);
-           }
-       })
+   function handleClick(a, e){
+    //    e.preventDefault(); 
+       setAnimal(a)
+       setClosedAnimal(false)
+    //    rescue.animals.map(a => {
+    //        if (a.name === e.target.innerText) {
+    //            setAnimal(a);
+    //            setClosedAnimal(false);
+    //        }
+    //    })
    }
    function handleAdd(e) {
        e.preventDefault();
@@ -136,6 +138,7 @@ function Animals({ rescue }) {
         setDisplayedAnimals(adoptMatches)
     }
   function sortAnimals(e) {
+    e.preventDefault();
     setChecked(!checked)
     if (e.target.checked === true) {
         displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? -1 : 1)
@@ -143,6 +146,11 @@ function Animals({ rescue }) {
     else { 
         displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
     }
+}
+function handleAddToProject(e, a) {
+    e.preventDefault();
+    console.log(project.id, a.id)
+    //post projectAnimal projectID & Animal ID
 }
 return (
         <div>
@@ -186,9 +194,11 @@ return (
             </form>
             </div>
             <p>All Animals</p>
-            {displayedAnimals.map(a => <li key={a.id} onClick={handleClick}>{a.name} </li>)}
+            {displayedAnimals.map(a => 
+            <li key={a.id} onClick={e => handleClick(a, e)}>{a.name} {assignNew === "Animal" ? <button onClick={e => handleAddToProject(e, a)}>+</button> : null}
+            </li> ) }
             {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
-            <button onClick={handleAdd}>Add New Animal</button>
+            <button style={{display: assignNew === "Animal" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>
                 <input name="sex" placeholder="Sex"/>
