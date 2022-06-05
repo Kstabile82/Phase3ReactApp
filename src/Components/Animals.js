@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
+import ProjectAssigner from "./ProjectAssigner";
 
 function Animals({ rescue, assignNew, setAssignNew, project }) {
     const [animal, setAnimal] = useState({})
@@ -16,6 +17,7 @@ function Animals({ rescue, assignNew, setAssignNew, project }) {
     const [filterSex, setFilterSex] = useState("")
     const [filterAge, setFilterAge] = useState("")
     const [filterAdopt, setFilterAdopt] = useState(false)
+    const [newProjAnimal, setNewProjAnimal] = useState([])
     let animalMatchArray = []
     let sexMatches = [];
     let ageMatches;
@@ -147,9 +149,9 @@ function Animals({ rescue, assignNew, setAssignNew, project }) {
         displayedAnimals.sort((a,b) => (a.created_at > b.created_at) ? 1 : -1)
     }
 }
-function handleAddToProject(e, a) {
+function handleAddAnimalToProject(e, a) {
     e.preventDefault();
-    console.log(project.id, a.id)
+    setNewProjAnimal([project, a]);
     //post projectAnimal projectID & Animal ID
 }
 return (
@@ -195,9 +197,10 @@ return (
             </div>
             <p>All Animals</p>
             {displayedAnimals.map(a => 
-            <li key={a.id} onClick={e => handleClick(a, e)}>{a.name} {assignNew === "Animal" ? <button onClick={e => handleAddToProject(e, a)}>+</button> : null}
+            <li key={a.id} onClick={e => handleClick(a, e)}>{a.name} {assignNew === "Animal" ? <button onClick={e => handleAddAnimalToProject(e, a)}>+</button> : null}
             </li> ) }
             {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
+            {newProjAnimal.length === 2 ? <ProjectAssigner newProjAnimal={newProjAnimal} project={project}/> : null}
             <button style={{display: assignNew === "Animal" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>

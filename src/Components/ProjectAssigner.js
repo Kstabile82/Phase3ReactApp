@@ -7,3 +7,21 @@
 //edit volunteers, edit animals buttons in project card that trigger component
 //+ posts new project_animal or project_volunteer with the right IDs
 //- deletes based on IDs
+
+
+import React, { useState } from "react";
+
+function ProjectAssigner({ newProjVol, newProjAnimal, project, setProject }) {
+    function postNewProjVol() {
+
+    }
+    function postNewProjAnimal() {
+        //setProject
+    }
+    return (
+        <div></div>
+    )
+}
+export default ProjectAssigner;
+
+

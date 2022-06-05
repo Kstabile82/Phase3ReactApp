@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
+import ProjectAssigner from "./ProjectAssigner";
 
-function Volunteers({ rescue }) {
+function Volunteers({ rescue, assignNew, setAssignNew, project, setProject }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
@@ -12,6 +13,7 @@ function Volunteers({ rescue }) {
     let filtertalent;
     const [filterLocation, setFilterLocation] = useState("")
     const [filterTalent, setFilterTalent] = useState("")
+    const [newProjVol, setNewProjVol] = useState([])
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;
@@ -22,13 +24,13 @@ useEffect(() => {
 }, []);   
 
    function handleClick(e) {
-            e.preventDefault();
-            rescue.volunteers.map(vol => {
+    e.preventDefault();
+    rescue.volunteers.map(vol => {
                 if (vol.name === e.target.innerText) {
                     setVolunteer(vol);
                     setClosedVol(false);
                 }
-            })
+    })
    }
     function handleAdd(e) {
         e.preventDefault();
@@ -100,6 +102,13 @@ useEffect(() => {
         displayedVolunteers.sort((a,b) => (a.project_volunteers.length > b.project_volunteers.length) ? 1 : -1)
     }
 }
+function handleAddVolToProject(e, v) {
+    e.preventDefault();
+    console.log(v)
+    setNewProjVol([project, v])
+    //post projectAnimal projectID & Animal ID
+}
+console.log(newProjVol.length)
 return (
         <div>
             <div className="filter"> 
@@ -138,12 +147,12 @@ return (
             </div>
            <br></br>
             <p>All Volunteers</p>
-                  {displayedVolunteers.map(v => 
-                    <li key={v.id} onClick={handleClick}>{v.name}
-                    </li>
-                  )}
-                 {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} setVolunteer={setVolunteer} setClosedVol={setClosedVol} closedVol={closedVol} rescue={rescue} onDeleteVolunteer={onDeleteVolunteer} /> }
-                 <button onClick={handleAdd}>Add New Volunteer</button>
+            {displayedVolunteers.map(v => 
+            <li key={v.id} onClick={e => handleClick(v, e)}>{v.name} {assignNew === "Volunteer" ? <button onClick={e => handleAddVolToProject(e, v)}>+</button> : null}
+            </li> ) }
+            {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} onDeleteVolunteer={onDeleteVolunteer} setVolunteer={setVolunteer} closedVol={closedVol} setClosedVol={setClosedVol} /> }
+            {newProjVol.length === 2 ? <ProjectAssigner newProjVol={newProjVol} project={project}/> : null}
+            <button style={{display: assignNew === "Volunteer" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Volunteer</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>
                 <input name="location" placeholder="Location"/>
