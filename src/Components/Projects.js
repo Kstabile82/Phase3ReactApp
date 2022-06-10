@@ -21,7 +21,7 @@ useEffect(() => {
 
    function handleClick(e) {
             e.preventDefault();
-            rescue.projects.map(proj => {
+            displayedProjects.map(proj => {
                 if (proj.title === e.target.innerText) {
                     setProject(proj);
                     setClosed(false);
@@ -89,7 +89,7 @@ function sortProjects(e) {
 }
       return (
         <div>
-          <br></br>
+          <h2>Projects</h2>
           <div className="filter"> 
             Filter by:
             <br></br>
@@ -112,7 +112,6 @@ function sortProjects(e) {
                 <button>Submit</button>
             </form>
             </div>
-            <p>All Projects</p>
                   {displayedProjects.map(p => 
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>

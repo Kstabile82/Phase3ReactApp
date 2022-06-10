@@ -156,6 +156,7 @@ function handleAddAnimalToProject(e, a) {
 }
 return (
         <div>
+            <h2>Animals</h2>
             <div className="filter"> 
             Filter by:
             <br></br>
@@ -195,7 +196,6 @@ return (
                 <button>Submit</button>
             </form>
             </div>
-            <p>All Animals</p>
             {displayedAnimals.map(a => 
             <li key={a.id} onClick={e => handleClick(a, e)}>{a.name} {assignNew === "Animal" ? <button onClick={e => handleAddAnimalToProject(e, a)}>+</button> : null}
             </li> ) }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 import ProjectAssigner from "./ProjectAssigner";
 
-function Volunteers({ rescue, assignNew, setAssignNew, project, setProject }) {
+function Volunteers({ rescue, assignNew, setAssignNew, project, setProject, projVolunteers, setProjVolunteers }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
@@ -22,7 +22,6 @@ useEffect(() => {
   .then((r) => r.json())
   .then((rescueVolunteers) => setDisplayedVolunteers(rescueVolunteers));
 }, []);   
-
    function handleClick(e) {
     e.preventDefault();
     rescue.volunteers.map(vol => {
@@ -61,7 +60,6 @@ useEffect(() => {
         const updatedVolunteers = rescue.volunteers.filter((volunteer) => volunteer.id !== id);
         setDisplayedVolunteers(updatedVolunteers)
        }
-
        function handleFilterVolChange(e) {
         e.preventDefault();
         setDisplayedVolunteers(rescue.volunteers)
@@ -75,7 +73,6 @@ useEffect(() => {
         }
     } 
     volMatchArray = rescue.volunteers;
-
     function handleSubmitVolFilter(e) {
         e.preventDefault(); 
         setVolSubmitted(true);
@@ -104,20 +101,32 @@ useEffect(() => {
 }
 function handleAddVolToProject(e, v) {
     e.preventDefault();
-    console.log(v)
-    setNewProjVol([project, v])
-    //post projectAnimal projectID & Animal ID
+    setNewProjVol(v)
+    fetch(`http://localhost:9292/project_volunteers`, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify ({
+             volunteer_id: v.id,
+             project_id: project.id    
+             }),
+         })
+         .then((r) => r.json())
+         .then(newAdd => {
+            let newVolunteerObj = displayedVolunteers.find(v => v.id === newAdd.volunteer_id)
+            setProjVolunteers([...projVolunteers, newVolunteerObj])
+         })
 }
-console.log(newProjVol.length)
 return (
         <div>
+            <h2>Volunteers</h2>
             <div className="filter"> 
             Filter by:
             <br></br>
             <label className="sortbybusiness"> Busiest (most to least) 
              <input id="sortBusiest" type="checkbox" onChange={sortVols} />
             </label>
-            <br></br>
             <form onSubmit={handleSubmitVolFilter}>
             <select name="location" onChange={handleFilterVolChange}>
                      <option value="" hidden>Location</option>
@@ -145,13 +154,12 @@ return (
                 <button>Submit</button>
             </form>
             </div>
-           <br></br>
-            <p>All Volunteers</p>
             {displayedVolunteers.map(v => 
-            <li key={v.id} onClick={e => handleClick(v, e)}>{v.name} {assignNew === "Volunteer" ? <button onClick={e => handleAddVolToProject(e, v)}>+</button> : null}
-            </li> ) }
+                 <li key={v.id} onClick={handleClick}>{v.name} {assignNew === "Volunteer" ? <button onClick={e => handleAddVolToProject(e, v)}>+</button> : null}
+                 </li> ) }
             {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} onDeleteVolunteer={onDeleteVolunteer} setVolunteer={setVolunteer} closedVol={closedVol} setClosedVol={setClosedVol} /> }
-            {newProjVol.length === 2 ? <ProjectAssigner newProjVol={newProjVol} project={project}/> : null}
+            {newProjVol.length > 0 ? <ProjectAssigner newProjVol={newProjVol} project={project} projVolunteers={projVolunteers} setProjVolunteers={setProjVolunteers}/> : null}
+            
             <button style={{display: assignNew === "Volunteer" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Volunteer</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>

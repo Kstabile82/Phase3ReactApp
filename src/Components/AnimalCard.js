@@ -52,7 +52,7 @@ function AnimalCard({ animal, setAnimal, onDeleteAnimal, closedAnimal, setClosed
     setClosedAnimal(true)
 }
 return (
-        <div style={{display: closedAnimal === true ? 'none' : 'visible' }}>
+        <div className="animalcard" style={{display: closedAnimal === true ? 'none' : 'visible' }}>
             <ul key={animal.id}>{animal.name}
                 <div>{animal.sex}</div>
                 <div>{animal.color}</div>

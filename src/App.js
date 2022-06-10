@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './App.css';
 import Rescue from './Components/Rescue' 
 import AddNewRescue from './Components/AddNewRescue'
+import image from './AnimalRescue.jpg'
 
 function App() {
  const [rescues, setRescues] = useState([])
@@ -19,7 +20,6 @@ function App() {
       .then((r) => r.json())
       .then((rescuelist) => setRescues(rescuelist));
    }, []);
-
 function handleLogIn(e) {
   e.preventDefault();
   setInputID(e.target.firstChild.nextSibling.value)
@@ -30,7 +30,6 @@ function handleLogIn(e) {
     }
   })
 }
-
 function handleShowAddForm(e) {
   e.preventDefault();
   setAdd(true);
@@ -42,8 +41,10 @@ function handleSubmit(e) {
 }
    return (
     <div>
-      My Animal Rescue App
-      <form className="login" onSubmit={handleLogIn} style={{display: loggedOut ? 'visible' : 'none' }}> 
+      <img className="pic" src={image} height={300} width={1200}></img>
+      {!rescue && loggedOut ? 
+      <div>
+        <form className="login" onSubmit={handleLogIn} > 
                 Rescue ID:  
                 <input 
                 type="text" 
@@ -51,22 +52,14 @@ function handleSubmit(e) {
                 placeholder="Enter Rescue ID"
                 onChange={(e) => setInputID(e.target.value)}></input>  
                 <button>Enter</button>
-            </form>
-            {/* <form className="newRescue" onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
-                Add New Rescue:  
-                <input 
-                type="text"
-                name="rescuename"
-                placeholder="Enter Rescue Name"
-                onChange={handleAdd}
-                ></input>                
-                <button>Enter</button> 
-            </form>  */}
-            {rescue && !loggedOut ? <Rescue rescue={rescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut}
-            // onRescueDelete={handleDeleteRescue}
-            // onUpdateRescue={handleUpdateRescue}
-            /> : null}
-          <button onClick={handleShowAddForm} style={{display: loggedOut ? 'visible' : 'none' }}>Add New Rescue</button>
+            </form> 
+            <button onClick={handleShowAddForm}>Add New Rescue</button>
+            </div>
+            : 
+            <div>
+            {/* {rescue && !loggedOut ? <Rescue rescue={rescue} setRescue={setRescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut} */}
+            <Rescue rescue={rescue} setRescue={setRescue} setLoggedOut={setLoggedOut}/> 
+             </div> } 
             { add ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
                 <input 
                 name="name" 
@@ -82,8 +75,8 @@ function handleSubmit(e) {
                 onChange={(e) => setLocation(e.target.value)}/>
                 <button>Submit</button>
             </form> : null }
-            {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null}
-
+            {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null} 
+     
     </div>
    );
 }

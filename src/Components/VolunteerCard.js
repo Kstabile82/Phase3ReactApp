@@ -51,7 +51,7 @@ function VolunteerCard({ volunteer, setVolunteer, closedVol, setClosedVol, onDel
         setClosedVol(true)
     }
 return (
-        <div style={{display: closedVol ? 'none' : 'visible' }}>
+        <div className="volunteercard" style={{display: closedVol ? 'none' : 'visible' }}>
             <ul key={volunteer.id}>{volunteer.name}
                 <div>{volunteer.location}</div>
                 <div>{volunteer.talents}</div>

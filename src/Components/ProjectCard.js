@@ -1,20 +1,20 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 import AnimalCard from "./AnimalCard";
 import Animals from "./Animals";
 import Volunteers from "./Volunteers";
 
-
 function ProjectCard({ project, setProject, setClosed, closed, rescue, onDeleteProject }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
-    const [projVolunteers, setProjVolunteers] = useState(project.project_volunteers);
+    const [projVolunteers, setProjVolunteers] = useState(project.volunteers)
     const [projAnimals, setProjAnimals] = useState(project.project_animals);
     const [assignNew, setAssignNew] = useState("")
     let projectUpdate = project;
     let volArr; 
     let animalArr;
+
 function handleUpdateProject(e){
    e.preventDefault();
    setClickedUpdate(true)
@@ -63,25 +63,30 @@ function handleEdit(e){
      setClosed(true)
      setAssignNew("")
  }
- function handleDeletePV(e) {
+ function handleDeletePV(e, pv) {
      e.preventDefault();
-     //delete pv
-    let vo = rescue.volunteers.find(v => v.name + " -" === e.target.parentElement.innerText)
-    let projVolDelete = projVolunteers.find(pv => pv.volunteer_id === vo.id)
+     let vo = rescue.volunteers.find(v => v.name === pv.name)
+     let projVolDelete = project.project_volunteers.find(ppv => ppv.volunteer_id === vo.id)
+     console.log(projVolDelete)
+     fetch(`http://localhost:9292/project_volunteers/${projVolDelete.id}`, {
+        method: "DELETE",
+      })
+        const updatedPVs = projVolunteers.filter(pv => pv.id !== projVolDelete.volunteer_id);
+        setProjVolunteers(updatedPVs);      
 }
 function handleAssignAnimal(e) {
     e.preventDefault();
     setAssignNew("Animal")
-
 }
 function handleAssignVolunteer(e) {
     e.preventDefault();
     setAssignNew("Volunteer")
-
+}
+function handleSubmitUpdatedProj(e){
+    e.preventDefault();
 }
 return (
-        <div style={{display: closed === true ? 'none' : 'visible' }}>
-            <form>
+        <div className="projectcard" style={{display: closed === true ? 'none' : 'visible' }}>
             <div key={project.id}>Title:{project.title}
             { clickedUpdate ? <input name="title" defaultValue={project.title} onChange={handleEdit}/> : null}
                 <div>Type: {project.proj_type}</div>
@@ -92,15 +97,15 @@ return (
                 <div>Project Animals: {projAnimals.map(pa => pa.project_id === project.id ? rescue.animals.map(ra => ra.id === pa.animal_id ? <div><li>{ra.name}</li> {clickedUpdate ? <button>-</button> : null} </div>: null) : null)}
                 </div> {clickedUpdate ? <button onClick={handleAssignAnimal}>Assign New</button> : null}
                 {assignNew === "Animal" ? <Animals rescue={rescue} assignNew={assignNew} setAssignNew={setAssignNew} project={project}/> : null}
-                {/* <div>Project Volunteers: {projVolunteers.map(pv => pv.project_id === project.id ? rescue.volunteers.map(rv => rv.id === pv.volunteer_id ? <li>{rv.name}</li> : null) : null)} */}
-                <div>Project Volunteers: {projVolunteers.map(pv => pv.project_id === project.id ? rescue.volunteers.map(rv => rv.id === pv.volunteer_id ? <div><li>{rv.name}</li> {clickedUpdate ? <button>-</button> : null} </div>: null) : null)}
+                {/* <div>Project Volunteers: {projVolunteers.map(pv => pv.project_id === project.id ? rescue.volunteers.map(rv => rv.id === pv.volunteer_id ? <div><li>{rv.name}</li> {clickedUpdate ? <button>-</button> : null} </div>: null) : null)} */}
+                <div>Project Volunteers: {projVolunteers.map(pv => <div><li>{pv.name}</li> {clickedUpdate ? <button onClick={e => handleDeletePV(e, pv)}>-</button> : null} </div>)} 
                 </div> {clickedUpdate ? <button onClick={handleAssignVolunteer}>Assign New</button> : null}
-                {assignNew === "Volunteer" ? <Volunteers rescue={rescue} assignNew={assignNew} setAssignNew={setAssignNew} project={project} setProject={setProject}/> : null}
+                {/* </div> {clickedUpdate ? <button onClick={handleAssignVolunteer}>Assign New</button> : null} */}
+                {assignNew === "Volunteer" ? <Volunteers rescue={rescue} assignNew={assignNew} setAssignNew={setAssignNew} project={project} setProject={setProject} projVolunteers={projVolunteers} setProjVolunteers={setProjVolunteers}/> : null}
                 {/* <div>Project Volunteers: {projVolunteers.map(pv => pv.project_id === project.id ? rescue.volunteers.map(rv => rv.id === pv.volunteer_id ? <li>{rv.name}</li> : null) : null)} */}               
                 {!clickedUpdate ? <button key="update" onClick={handleUpdateProject}>update</button> : null}
             </div>
-            {clickedUpdate ? <button>Submit Updates</button> : null}
-            </form> 
+            {clickedUpdate ? <button onClick={handleSubmitUpdatedProj}>Submit Updates</button> : null}
             <button key="delete" onClick={handleDeleteProject}>Delete Project</button>
                 <button onClick={handleClose}>Close</button>
             {/* { clickedUpdate ? <form onSubmit={handleSubmitUpdateProject}>

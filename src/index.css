@@ -1,4 +1,5 @@
 body {
+  background-color: rgb(241, 200, 236);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -6,8 +7,129 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.image {
+  text-align: center;
+}
+.login {
+  top: 2em;
+  background-color: rgb(194, 31, 153);
+  overflow: hidden;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+.welcome {
+  justify-content: center;
+  text-align: center;
+}
+.projectcard {
+  border-style: solid; 
+  background-color: white;
+  position: absolute;
+  padding: 5em;
+}
+.animalcard {
+  border-style: solid; 
+  background-color: white;
+  position: absolute;
+  padding: 5em;
+}
+.volunteercard {
+  border-style: solid; 
+  background-color: white;
+  position: absolute;
+  padding: 5em;
+}
+/* .Animals {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+.Volunteers {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+.Projects {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+} */
 
+/* .tryit {
+  position: absolute;
+  text-align: center;
+  top: 25em;
+}
+.card {
+  border-style: solid; 
+  background-color: white;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.Home:hover {
+  background-color: #ddd;
+  color: black;
+}
+.About:hover {
+  background-color: #ddd;
+  color: black;
+}
+.welcomeform {
+  text-align: center;
+  position: absolute;
+  top: 25em;
+  margin-left: 20em;
+}
+.Login:hover {
+  background-color: #ddd;
+  color: black;
+}
+.login {
+  position: absolute;
+  top: 25em;
+  margin-left: 10em;
+}
+.newuser {
+  position: absolute;
+  top: 25em;
+  margin-left: 40em;
+}
+.seeallexercises {
+  column-count: 3;
+  margin-right: 10em;
+  margin-left: 10em;
+}
+
+.listofall {
+  text-align: center;
+  white-space: normal;
+  display: block;
+  break-inside: avoid;
+}
+
+.exerciseContainer {
+  white-space: normal;
+  border-style: outset;
+  display: block;
+  break-inside: avoid;
+
+} */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
+} 
