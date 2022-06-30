@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
-import ProjectAssigner from "./ProjectAssigner";
 
-function Volunteers({ rescue, assignNew, setAssignNew, project, setProject, projVolunteers, setProjVolunteers }) {
+function Volunteers({ rescue, assignNew, displayedAddVols, setDisplayedAddVols, setAssignNew, project, setProject, projVolunteers, setProjVolunteers }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
-    const [displayedVolunteers, setDisplayedVolunteers] = useState(rescue.volunteers)
+    const [displayedVolunteers, setDisplayedVolunteers] = useState(rescue.volunteers) 
+    const [displayedPVs, setDisplayedPVs] = useState([])
     const [checked, setChecked] = useState(false)
     const [volSubmitted, setVolSubmitted] = useState(false)
     let filterlocation;
     let filtertalent;
     const [filterLocation, setFilterLocation] = useState("")
     const [filterTalent, setFilterTalent] = useState("")
-    const [newProjVol, setNewProjVol] = useState([])
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;
@@ -73,6 +72,7 @@ useEffect(() => {
         }
     } 
     volMatchArray = rescue.volunteers;
+
     function handleSubmitVolFilter(e) {
         e.preventDefault(); 
         setVolSubmitted(true);
@@ -90,6 +90,7 @@ useEffect(() => {
         }
         setDisplayedVolunteers(talentMatches)
     }
+
   function sortVols(e) {
     setChecked(!checked)
     if (e.target.checked === true) {
@@ -98,25 +99,7 @@ useEffect(() => {
     else { 
         displayedVolunteers.sort((a,b) => (a.project_volunteers.length > b.project_volunteers.length) ? 1 : -1)
     }
-}
-function handleAddVolToProject(e, v) {
-    e.preventDefault();
-    setNewProjVol(v)
-    fetch(`http://localhost:9292/project_volunteers`, {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify ({
-             volunteer_id: v.id,
-             project_id: project.id    
-             }),
-         })
-         .then((r) => r.json())
-         .then(newAdd => {
-            let newVolunteerObj = displayedVolunteers.find(v => v.id === newAdd.volunteer_id)
-            setProjVolunteers([...projVolunteers, newVolunteerObj])
-         })
+
 }
 return (
         <div>
@@ -154,12 +137,8 @@ return (
                 <button>Submit</button>
             </form>
             </div>
-            {displayedVolunteers.map(v => 
-                 <li key={v.id} onClick={handleClick}>{v.name} {assignNew === "Volunteer" ? <button onClick={e => handleAddVolToProject(e, v)}>+</button> : null}
-                 </li> ) }
-            {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} onDeleteVolunteer={onDeleteVolunteer} setVolunteer={setVolunteer} closedVol={closedVol} setClosedVol={setClosedVol} /> }
-            {newProjVol.length > 0 ? <ProjectAssigner newProjVol={newProjVol} project={project} projVolunteers={projVolunteers} setProjVolunteers={setProjVolunteers}/> : null}
-            
+                 {displayedVolunteers.map(v => <li key={v.id} onClick={handleClick}>{v.name}</li> )  }
+            {volunteer.id === undefined || closedVol ? null : <VolunteerCard volunteer={volunteer} onDeleteVolunteer={onDeleteVolunteer} setVolunteer={setVolunteer} closedVol={closedVol} setClosedVol={setClosedVol} /> }            
             <button style={{display: assignNew === "Volunteer" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Volunteer</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>

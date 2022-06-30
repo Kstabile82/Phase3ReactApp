@@ -12,6 +12,7 @@ let filtertype;
 const [filterType, setFilterType] = useState("")
 let projMatchArray = []
 let typeMatches = [];
+const [projCard, setProjCard] = useState("")
 
 useEffect(() => {
   fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
@@ -21,14 +22,10 @@ useEffect(() => {
 
    function handleClick(e) {
             e.preventDefault();
-            displayedProjects.map(proj => {
-                if (proj.title === e.target.innerText) {
-                    setProject(proj);
-                    setClosed(false);
-                }
-            })
+            setProjCard(displayedProjects.find(dp => dp.title === e.target.innerText))
+            setClosed(false)          
    }
-    function handleAdd(e) {
+   function handleAdd(e) {
         e.preventDefault();
         setAdd(true);
     }
@@ -51,6 +48,7 @@ useEffect(() => {
           })
           .then((r) => r.json())
           .then(newProj => setDisplayedProjects([...rescue.projects, newProj])); 
+
     }
     function onDeleteProject(id) {
       const updatedProjects = rescue.projects.filter((project) => project.id !== id);
@@ -116,7 +114,9 @@ function sortProjects(e) {
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
-                 {project.id === undefined || closed ? null : <ProjectCard project={project} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} /> }
+                 {/* {project.id === undefined || closed ? null : <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} /> } */}
+                 {projCard !== "" ? <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject}/> : null }
+
                  <button onClick={handleAdd}>Add New Project</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="title" placeholder="Title"/>
