@@ -2,19 +2,29 @@
 import React, { useEffect, useState } from "react";
 import Animals from "./Animals";
 
-function ProjectCard({ displayedProjects, projCard, setProjCard, setClosed, closed, rescue, onDeleteProject }) {
+function ProjectCard({ projCard, setProjCard, setClosed, closed, rescue, onDeleteProject }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     const [assignNew, setAssignNew] = useState("")
+    const [assignNewAnimal, setAssignNewAnimal] = useState("")
     const [displayedAddVols, setDisplayedAddVols] = useState([])
+    const [displayedAddAnimals, setDisplayedAddAnimals] = useState([])
     const [projVols, setProjVols] = useState(projCard.volunteers)
+    const [projAnimals, setProjAnimals] = useState(projCard.animals)
+
 let projectUpdate = projCard;
 let pvs = projCard.project_volunteers
+let pas = projCard.project_animals
 let displayedPVsToAddArr = []
+let displayedPAsToAddArr = []
 
 let volIdArr = [];
 projVols.map(p => {
     volIdArr.push(p.id)
+})
+let animalIdArr = [];
+projAnimals.map(p => {
+    animalIdArr.push(p.id)
 })
 
 function handleUpdateProject(e){
@@ -57,21 +67,45 @@ function handleEdit(e){
      e.preventDefault(); 
      setClosed(true)
      setAssignNew("")
+     setAssignNewAnimal("")
      setProjCard("")
  }
  function handleDeletePV(e, pv) {
      e.preventDefault();
      let pvToDelete = pvs.find(p => p.volunteer_id === pv.id) 
+     let volToDelete = displayedAddVols.find(dav => dav.id === pvToDelete.volunteer_id)
         fetch(`http://localhost:9292/project_volunteers/${pvToDelete.id}`, {
         method: "DELETE",
      })
      .then((r) => r.json())
-     .then(() => setProjVols(projCard.volunteers.filter(pv => pv.id !== pvToDelete.volunteer_id)))
+     .then(() => {
+         setProjVols(projCard.volunteers.filter(pv => pv.id !== pvToDelete.volunteer_id))
+         setDisplayedAddVols([...displayedAddVols, volToDelete])
+     })
+}
+function handleDeletePA(e, pa) {
+    e.preventDefault();
+    let paToDelete = pas.find(p => p.animal_id === pa.id) 
+    let animalToDelete = displayedAddAnimals.find(daa => daa.id === paToDelete.animal_id)
+       fetch(`http://localhost:9292/project_animals/${paToDelete.id}`, {
+       method: "DELETE",
+    })
+    .then((r) => r.json())
+    .then(() => {
+        setProjAnimals(projCard.animals.filter(pa => pa.id !== paToDelete.animal_id))
+        setDisplayedAddAnimals([...displayedAddAnimals, animalToDelete])
+    })
 }
 
 function handleAssignAnimal(e) {
     e.preventDefault();
-    setAssignNew("Animal")
+    setAssignNewAnimal("Animal")
+    rescue.animals.map(anim => {
+        if (!animalIdArr.includes(anim.id)) {
+            displayedPAsToAddArr.push(anim)
+        }
+    })
+    setDisplayedAddAnimals(displayedPAsToAddArr) 
 }
 
 function handleAssignVolunteer(e) {
@@ -84,9 +118,9 @@ function handleAssignVolunteer(e) {
     })
     setDisplayedAddVols(displayedPVsToAddArr) 
 }
-function handleSubmitUpdatedProj(e){
-    e.preventDefault();
-}
+// function handleSubmitUpdatedProj(e){
+//     e.preventDefault();
+// }
 function handleAddVolToProject(e, displayedV) {
     e.preventDefault();
     let volunteer_id = displayedV.id
@@ -96,7 +130,7 @@ function handleAddVolToProject(e, displayedV) {
     // projVols.map(p => {
     //     volIdArr.push(p.id)
     // })
- 
+
     if (projVols.length === 0 || !volIdArr.includes(volunteer_id)) {
         fetch(`http://localhost:9292/project_volunteers`, {
             method: "POST",
@@ -112,6 +146,30 @@ function handleAddVolToProject(e, displayedV) {
             .then((newAdd) => { 
             newAdd = rescue.volunteers.find(v => v.id === volunteer_id)
             setProjVols([...projVols, newAdd])
+            setDisplayedAddVols(displayedAddVols.filter(dpv => dpv.id !== volunteer_id))
+            })
+        }
+ }
+ function handleAddAnimalToProject(e, displayedA) {
+    e.preventDefault();
+    let animal_id = displayedA.id
+    let project_id = projCard.id
+    if (projAnimals.length === 0 || !animalIdArr.includes(animal_id)) {
+        fetch(`http://localhost:9292/project_animals`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify ({
+                animal_id,
+                project_id    
+                }),
+            })
+            .then((r) => r.json())
+            .then((newAdd) => { 
+            newAdd = rescue.animals.find(a => a.id === animal_id)
+            setProjAnimals([...projAnimals, newAdd])
+            setDisplayedAddAnimals(displayedAddAnimals.filter(daa => daa.id !== animal_id))
             })
         }
  }
@@ -126,15 +184,16 @@ return (
                 {/* <div>Created: {projCard.created_at}</div>
                 <div>Updated: {projCard.updated_at}</div> */}
                 <div>Project Animals: 
+                {projAnimals ? projAnimals.map(pa => <div><li>{pa.name}</li>{clickedUpdate ? <button onClick={e => handleDeletePA(e, pa)}>-</button> : null} </div> ) : null}
                 </div>
-                {assignNew === "Animal" ? <Animals rescue={rescue} assignNew={assignNew} setAssignNew={setAssignNew} project={projCard}/> : null}
                 <div>Project Volunteers:
                 {projVols ? projVols.map(pv => <div><li>{pv.name}</li>{clickedUpdate ? <button onClick={e => handleDeletePV(e, pv)}>-</button> : null} </div> ) : null}
                  </div>
-                </div> {clickedUpdate ? <button onClick={handleAssignVolunteer}>Assign New</button> : null}
+                </div> {clickedUpdate ? <div><button onClick={handleAssignVolunteer}>Assign New Volunteer</button><button onClick={handleAssignAnimal}>Assign New Animal</button></div> : null}
                 {assignNew === "Volunteer" ?  displayedAddVols.map(displayedV => <div> <li>{displayedV.name}</li> <button onClick={e => handleAddVolToProject(e, displayedV)}>+</button></div> ) : null}
-                {!clickedUpdate ? <button key="update" onClick={handleUpdateProject}>update</button> : null}
-                {clickedUpdate ? <button onClick={handleSubmitUpdatedProj}>Submit Updates</button> : null}
+                {assignNewAnimal === "Animal" ?  displayedAddAnimals.map(displayedA => <div> <li>{displayedA.name}</li> <button onClick={e => handleAddAnimalToProject(e, displayedA)}>+</button></div> ) : null}
+                {!clickedUpdate ? <button key="update" onClick={handleUpdateProject}>Update</button> : null}
+                {/* {clickedUpdate ? <button onClick={handleSubmitUpdatedProj}>Submit Updates</button> : null} */}
                 <button key="delete" onClick={handleDeleteProject}>Delete Project</button>
                  <button onClick={handleClose}>Close</button>
             </div>
