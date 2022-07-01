@@ -73,7 +73,8 @@ function handleEdit(e){
  function handleDeletePV(e, pv) {
      e.preventDefault();
      let pvToDelete = pvs.find(p => p.volunteer_id === pv.id) 
-     let volToDelete = displayedAddVols.find(dav => dav.id === pvToDelete.volunteer_id)
+    //  let volToDelete = displayedAddVols.find(dav => dav.id === pvToDelete.volunteer_id)
+    let volToDelete = projVols.find(projV => projV.id === pvToDelete.volunteer_id)
         fetch(`http://localhost:9292/project_volunteers/${pvToDelete.id}`, {
         method: "DELETE",
      })
@@ -86,7 +87,7 @@ function handleEdit(e){
 function handleDeletePA(e, pa) {
     e.preventDefault();
     let paToDelete = pas.find(p => p.animal_id === pa.id) 
-    let animalToDelete = displayedAddAnimals.find(daa => daa.id === paToDelete.animal_id)
+    let animalToDelete = projAnimals.find(projA => projA.id === paToDelete.animal_id)
        fetch(`http://localhost:9292/project_animals/${paToDelete.id}`, {
        method: "DELETE",
     })
@@ -190,8 +191,10 @@ return (
                 {projVols ? projVols.map(pv => <div><li>{pv.name}</li>{clickedUpdate ? <button onClick={e => handleDeletePV(e, pv)}>-</button> : null} </div> ) : null}
                  </div>
                 </div> {clickedUpdate ? <div><button onClick={handleAssignVolunteer}>Assign New Volunteer</button><button onClick={handleAssignAnimal}>Assign New Animal</button></div> : null}
-                {assignNew === "Volunteer" ?  displayedAddVols.map(displayedV => <div> <li>{displayedV.name}</li> <button onClick={e => handleAddVolToProject(e, displayedV)}>+</button></div> ) : null}
-                {assignNewAnimal === "Animal" ?  displayedAddAnimals.map(displayedA => <div> <li>{displayedA.name}</li> <button onClick={e => handleAddAnimalToProject(e, displayedA)}>+</button></div> ) : null}
+                {assignNew === "Volunteer" && displayedAddVols.length > 0 ? displayedAddVols.map(displayedV => <div> <li>{displayedV.name}</li> <button onClick={e => handleAddVolToProject(e, displayedV)}>+</button></div> ) : null}
+                {assignNewAnimal === "Animal" && displayedAddAnimals.length > 0 ? displayedAddAnimals.map(displayedA => <div> <li>{displayedA.name}</li> <button onClick={e => handleAddAnimalToProject(e, displayedA)}>+</button></div> ) : null}
+                {assignNew == "Volunteer" && displayedAddVols.length === 0 ? <p>No more volunteers to add</p> : null }
+                {assignNewAnimal == "Animal" && displayedAddAnimals.length === 0 ? <p>No more animals to add</p> : null }
                 {!clickedUpdate ? <button key="update" onClick={handleUpdateProject}>Update</button> : null}
                 {/* {clickedUpdate ? <button onClick={handleSubmitUpdatedProj}>Submit Updates</button> : null} */}
                 <button key="delete" onClick={handleDeleteProject}>Delete Project</button>

@@ -25,6 +25,7 @@ useEffect(() => {
             setProjCard(displayedProjects.find(dp => dp.title === e.target.innerText))
             setClosed(false)          
    }
+   console.log(rescue.animals)
    function handleAdd(e) {
         e.preventDefault();
         setAdd(true);

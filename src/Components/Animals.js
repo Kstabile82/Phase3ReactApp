@@ -24,11 +24,11 @@ function Animals({ rescue, assignNew, setAssignNew, project }) {
     let adoptMatches;
     let breedMatches;
 
-    useEffect(() => {
-        fetch(`http://localhost:9292/rescues/${rescue.id}/animals`)
-        .then((r) => r.json())
-        .then((rescueAnimals) => setDisplayedAnimals(rescueAnimals));
-    }, []);
+    // useEffect(() => {
+    //     fetch(`http://localhost:9292/rescues/${rescue.id}/animals`)
+    //     .then((r) => r.json())
+    //     .then((rescueAnimals) => setDisplayedAnimals(rescueAnimals));
+    // }, []);
    function handleClick(a, e){
     //    e.preventDefault(); 
        setAnimal(a)
@@ -64,6 +64,7 @@ function Animals({ rescue, assignNew, setAssignNew, project }) {
         })
         .then((r) => r.json())
         .then(newAdd => setDisplayedAnimals([...displayedAnimals, newAdd]));  
+        //problem - animal adds on backend, but doesn't appear on the front end until I refresh the whole App
     }    
     function handleChangeFilter(e) {
         e.preventDefault();

@@ -16,11 +16,11 @@ function Volunteers({ rescue, assignNew, displayedAddVols, setDisplayedAddVols, 
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;
-useEffect(() => {
-  fetch(`http://localhost:9292/rescues/${rescue.id}/volunteers`)
-  .then((r) => r.json())
-  .then((rescueVolunteers) => setDisplayedVolunteers(rescueVolunteers));
-}, []);   
+// useEffect(() => {
+//   fetch(`http://localhost:9292/rescues/${rescue.id}/volunteers`)
+//   .then((r) => r.json())
+//   .then((rescueVolunteers) => setDisplayedVolunteers(rescueVolunteers));
+// }, []);   
    function handleClick(e) {
     e.preventDefault();
     rescue.volunteers.map(vol => {
