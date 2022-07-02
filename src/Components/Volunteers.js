@@ -19,7 +19,7 @@ function Volunteers({ rescue, assignNew }) {
 
    function handleClick(e) {
     e.preventDefault();
-    rescue.volunteers.map(vol => {
+    displayedVolunteers.map(vol => {
                 if (vol.name === e.target.innerText) {
                     setVolunteer(vol);
                     setClosedVol(false);
@@ -51,6 +51,8 @@ function Volunteers({ rescue, assignNew }) {
          .then((r) => r.json())
          .then(newAdd => setDisplayedVolunteers([...displayedVolunteers, newAdd]));    
      }    
+     console.log(displayedVolunteers)
+
      function onDeleteVolunteer(id) {
         const updatedVolunteers = rescue.volunteers.filter((volunteer) => volunteer.id !== id);
         setDisplayedVolunteers(updatedVolunteers)
