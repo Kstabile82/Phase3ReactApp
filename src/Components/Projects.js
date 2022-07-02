@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
 
-function Projects({ rescue }) {
+function Projects({ rescue, displayedVolunteers }) {
 const [displayedProjects, setDisplayedProjects] = useState([])
 const [project, setProject] = useState({})
 const [closed ,setClosed] = useState(false)
@@ -114,7 +114,7 @@ function sortProjects(e) {
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
-                 {projCard !== "" ? <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject}/> : null }
+                 {projCard !== "" ? <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} displayedVolunteers={displayedVolunteers}/> : null }
 
                  <button onClick={handleAdd}>Add New Project</button>
                 { add ? <form onSubmit={handleSubmit}>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
 
-function Animals({ rescue, assignNew, project }) {
+function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAnimals }) {
     const [animal, setAnimal] = useState({})
     const [add, setAdd] = useState(false)
     const [closedAnimal, setClosedAnimal] = useState(false)
-    const [displayedAnimals, setDisplayedAnimals] = useState(rescue.animals)
     const [checked, setChecked] = useState(false)
     const [submitted, setSubmitted] = useState(false)
+    // const [displayedAnimalsToFilter, setDisplayedAnimalsToFilter] = useState(displayedAnimals)
     let filtertype;
     let filtersex; 
     let filterage;
@@ -33,7 +33,7 @@ function Animals({ rescue, assignNew, project }) {
        setAdd(true);
    }
    function onDeleteAnimal(id) {
-    const updatedAnimals = rescue.animals.filter((animal) => animal.id !== id);
+    const updatedAnimals = displayedAnimals.filter((animal) => animal.id !== id);
     setDisplayedAnimals(updatedAnimals)
    }
    function handleSubmit(e) {

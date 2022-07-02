@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 
-function Volunteers({ rescue, assignNew }) {
+function Volunteers({ rescue, displayedVolunteers, setDisplayedVolunteers, assignNew }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
-    const [displayedVolunteers, setDisplayedVolunteers] = useState(rescue.volunteers) 
+    // const [displayedVolunteers, setDisplayedVolunteers] = useState([]) 
     const [displayedPVs, setDisplayedPVs] = useState([])
     const [checked, setChecked] = useState(false)
     const [volSubmitted, setVolSubmitted] = useState(false)
