@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import VolunteerCard from "./VolunteerCard";
 
-function Volunteers({ rescue, assignNew, displayedAddVols, setDisplayedAddVols, setAssignNew, project, setProject, projVolunteers, setProjVolunteers }) {
+function Volunteers({ rescue, assignNew }) {
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
@@ -16,11 +16,7 @@ function Volunteers({ rescue, assignNew, displayedAddVols, setDisplayedAddVols, 
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;
-// useEffect(() => {
-//   fetch(`http://localhost:9292/rescues/${rescue.id}/volunteers`)
-//   .then((r) => r.json())
-//   .then((rescueVolunteers) => setDisplayedVolunteers(rescueVolunteers));
-// }, []);   
+
    function handleClick(e) {
     e.preventDefault();
     rescue.volunteers.map(vol => {

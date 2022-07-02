@@ -36,9 +36,37 @@ function handleShowAddForm(e) {
 }
 function handleSubmit(e) {
   e.preventDefault();
-  setSubmitted(true);
-  setNewRescue({name: name, location: location})
+  // setSubmitted(true);
+  // setNewRescue({name: name, location: location})
+  fetch("http://localhost:9292/rescues", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify ({
+      name,
+      location, 
+  }),
+})
+    .then((r) => r.json())
+    .then((newAddition) => {
+      setRescues([...rescues, newAddition])
+      setRescue(newAddition)
+      setSubmitted(true)
+    })
 }
+// function AddNewRescue(e) {
+//   e.preventDefault();
+//   fetch("http://localhost:9292/rescues", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(newRescue)
+//     })
+//     .then((r) => r.json())
+//     .then(newAddition => setRescues([...rescues, newAddition]));
+// }
    return (
     <div>
       <img className="pic" src={image} height={300} width={1200}></img>
@@ -60,7 +88,7 @@ function handleSubmit(e) {
             {/* {rescue && !loggedOut ? <Rescue rescue={rescue} setRescue={setRescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut} */}
             <Rescue rescue={rescue} setRescue={setRescue} setLoggedOut={setLoggedOut}/> 
              </div> } 
-            { add ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
+            { add && submitted === false ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
                 <input 
                 name="name" 
                 placeholder="Name" 
@@ -75,7 +103,7 @@ function handleSubmit(e) {
                 onChange={(e) => setLocation(e.target.value)}/>
                 <button>Submit</button>
             </form> : null }
-            {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null} 
+            {/* {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null}  */}
      
     </div>
    );

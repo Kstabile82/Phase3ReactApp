@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
 
-function Animals({ rescue, assignNew, setAssignNew, project }) {
+function Animals({ rescue, assignNew, project }) {
     const [animal, setAnimal] = useState({})
     const [add, setAdd] = useState(false)
     const [closedAnimal, setClosedAnimal] = useState(false)
@@ -24,13 +24,7 @@ function Animals({ rescue, assignNew, setAssignNew, project }) {
     let adoptMatches;
     let breedMatches;
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:9292/rescues/${rescue.id}/animals`)
-    //     .then((r) => r.json())
-    //     .then((rescueAnimals) => setDisplayedAnimals(rescueAnimals));
-    // }, []);
    function handleClick(a, e){
-    //    e.preventDefault(); 
        setAnimal(a)
        setClosedAnimal(false)
    }
@@ -193,7 +187,6 @@ return (
             <li key={a.id} onClick={e => handleClick(a, e)}>{a.name} {assignNew === "Animal" ? <button onClick={e => handleAddAnimalToProject(e, a)}>+</button> : null}
             </li> ) }
             {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} /> }
-            {/* {newProjAnimal.length === 2 ? <ProjectAssigner newProjAnimal={newProjAnimal} project={project}/> : null} */}
             <button style={{display: assignNew === "Animal" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
                 <input name="name" placeholder="Name"/>
