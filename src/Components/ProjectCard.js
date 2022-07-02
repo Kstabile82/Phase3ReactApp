@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-function ProjectCard({ projCard, setProjCard, setClosed, volunteers, closed, rescue, onDeleteProject, displayedVolunteers, displayedAnimals, displayedProjects }) {
+function ProjectCard({ projCard, setProjCard, setClosed, closed, onDeleteProject, displayedVolunteers, displayedAnimals }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     const [assignNew, setAssignNew] = useState("")
@@ -9,25 +9,15 @@ function ProjectCard({ projCard, setProjCard, setClosed, volunteers, closed, res
     const [displayedAddVols, setDisplayedAddVols] = useState([])
     const [displayedAddAnimals, setDisplayedAddAnimals] = useState([])
     const [projVols, setProjVols] = useState()
-    const [projAnimals, setProjAnimals] = useState(projCard.animals) 
-    const [pVArray, setpVArray] = useState([])
-    // const [projVols, setProjVols] = useState(projCard.volunteers)
-    // const [projAnimals, setProjAnimals] = useState(projCard.animals) //these two need to happen in Project component as a get request
-
+    const [projAnimals, setProjAnimals] = useState() 
 let projectUpdate = projCard;
 let pvs = projCard.project_volunteers
 let pas = projCard.project_animals
 let displayedPVsToAddArr = []
 let displayedPAsToAddArr = []
-let displayedPVArray = []
-let volIdArr = [];
-// projVols.map(p => {
-//     volIdArr.push(p.id)
-// })
-let animalIdArr = [];
-projAnimals.map(p => {
-    animalIdArr.push(p.id)
-})
+let volArr = [];
+let animalArr = [];
+
 useEffect(() => {
     fetch(`http://localhost:9292/projects/${projCard.id}`)
     .then((r) => r.json())
@@ -36,30 +26,22 @@ useEffect(() => {
         proj.project_volunteers.map(ppV => {
             displayedVolunteers.map(dV => {
                 if (ppV.volunteer_id === dV.id) {
-                    volIdArr.push(dV)
+                    volArr.push(dV)
                 }
             })
         })
-        setProjVols(volIdArr)
-
-        // console.log(displayedVolunteers.filter(dV => proj.project_volunteers.filter(ppV => dV.id === ppV.volunteer_id)))
-        // console.log(displayedVolunteers.filter(dV => proj.project_volunteers.filter(ppv => dV.id === ppv.volunteer_id)))
+        proj.project_animals.map(ppA => {
+            displayedAnimals.map(dA => {
+                if (ppA.animal_id === dA.id) {
+                    animalArr.push(dA)
+                }
+            })
+        })
+        setProjVols(volArr)
+        setProjAnimals(animalArr)
     })
 
 }, []);
-
-// displayedVolunteers.filter(dV => projCard.project_volunteers.map(ppV => {
-//     if (ppV.volunteer_id === dV.id) {
-//         console.log(dV)
-//     }
-// }))
-
-// useEffect(() => {
-//     fetch(`http://localhost:9292/projects/${projCard.id}/project_volunteers`)
-//     .then((r) => r.json())
-//     .then((projVolunteers) => setProjVols(projVols.filter(pVols => projVolunteers.filter(pV => pV.volunteer_id === pVols.volunteer_id))))
-// }, []);
-// displayedPVArray = projVols.filter(pVols => pVArray.filter(pV => pV.volunteer_id === pVols.volunteer_id))
 
 function handleUpdateProject(e){
    e.preventDefault();
@@ -113,7 +95,7 @@ function handleDeletePA(e, pa) {
     })
     .then((r) => r.json())
     .then(() => {
-        setProjAnimals(projCard.animals.filter(pa => pa.id !== paToDelete.animal_id))
+        setProjAnimals(projAnimals.filter(pa => pa.id !== paToDelete.animal_id))
         setDisplayedAddAnimals([...displayedAddAnimals, animalToDelete])
     })
 }
@@ -122,7 +104,7 @@ function handleAssignAnimal(e) {
     e.preventDefault();
     setAssignNewAnimal("Animal")
     displayedAnimals.map(anim => {
-        if (!animalIdArr.includes(anim.id)) {
+        if (!animalArr.includes(anim.id)) {
             displayedPAsToAddArr.push(anim)
         }
     })
@@ -133,7 +115,7 @@ function handleAssignVolunteer(e) {
     e.preventDefault();
     setAssignNew("Volunteer")
     displayedVolunteers.map(vol => {
-        if (!volIdArr.includes(vol.id)) {
+        if (!volArr.includes(vol.id)) {
             displayedPVsToAddArr.push(vol)
         }
     })
@@ -145,7 +127,7 @@ function handleAddVolToProject(e, displayedV) {
     let volunteer_id = displayedV.id
     let project_id = projCard.id
 
-    if (projVols.length === 0 || !volIdArr.includes(volunteer_id)) {
+    if (projVols.length === 0 || !volArr.includes(volunteer_id)) {
         fetch(`http://localhost:9292/project_volunteers`, {
             method: "POST",
             headers: {
@@ -168,7 +150,7 @@ function handleAddVolToProject(e, displayedV) {
     e.preventDefault();
     let animal_id = displayedA.id
     let project_id = projCard.id
-    if (projAnimals.length === 0 || !animalIdArr.includes(animal_id)) {
+    if (projAnimals.length === 0 || !animalArr.includes(animal_id)) {
         fetch(`http://localhost:9292/project_animals`, {
             method: "POST",
             headers: {
