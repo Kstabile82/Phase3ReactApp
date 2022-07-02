@@ -38,7 +38,7 @@ function handleLogOut(e) {
 }
     return (
         <div className="welcome">
-            <h1>Hello, {rescue.name}!</h1>
+            <h1>Hello, {rescue.name}! (Your Rescue ID is {rescue.id})</h1>
             <button onClick={handleClick}>Volunteers
             </button>
             <button onClick={handleClick}>Animals
