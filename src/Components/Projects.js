@@ -9,14 +9,14 @@ const [checked, setChecked] = useState(false)
 const [projectSubmitted, setProjectSubmitted] = useState(false)
 let filtertype;
 const [filterType, setFilterType] = useState("")
+const [projCard, setProjCard] = useState("")
 let projMatchArray = []
 let typeMatches = [];
-const [projCard, setProjCard] = useState("")
 
    function handleClick(e) {
             e.preventDefault();
             setProjCard(displayedProjects.find(dp => dp.title === e.target.innerText))
-            setClosed(false)          
+            setClosed(false)   
    }
    function handleAdd(e) {
         e.preventDefault();
@@ -41,7 +41,6 @@ const [projCard, setProjCard] = useState("")
           })
           .then((r) => r.json())
           .then(newProj => setDisplayedProjects([...displayedProjects, newProj])); 
-
     }
     function onDeleteProject(id) {
       const updatedProjects = displayedProjects((project) => project.id !== id);
@@ -107,8 +106,7 @@ function sortProjects(e) {
                     <li key={p.id} onClick={handleClick}>{p.title}
                     </li>
                   )}
-                 {projCard !== "" ? <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} displayedVolunteers={displayedVolunteers} displayedAnimals={displayedAnimals}/> : null }
-
+                 {projCard !== "" ? <ProjectCard project={project} projCard={projCard} setProjCard={setProjCard} displayedProjects={displayedProjects} setProject={setProject} setClosed={setClosed} closed={closed} rescue={rescue} onDeleteProject={onDeleteProject} displayedVolunteers={displayedVolunteers} displayedAnimals={displayedAnimals} /> : null }
                  <button onClick={handleAdd}>Add New Project</button>
                 { add ? <form onSubmit={handleSubmit}>
                 <input name="title" placeholder="Title"/>
