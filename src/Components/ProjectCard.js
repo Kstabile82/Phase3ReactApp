@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-function ProjectCard({ projCard, setProjCard, setClosed, closed, rescue, onDeleteProject, displayedVolunteers }) {
+function ProjectCard({ projCard, setProjCard, setClosed, closed, rescue, onDeleteProject, displayedVolunteers, displayedAnimals }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     const [assignNew, setAssignNew] = useState("")
@@ -85,7 +85,7 @@ function handleDeletePA(e, pa) {
 function handleAssignAnimal(e) {
     e.preventDefault();
     setAssignNewAnimal("Animal")
-    rescue.animals.map(anim => {
+    displayedAnimals.map(anim => {
         if (!animalIdArr.includes(anim.id)) {
             displayedPAsToAddArr.push(anim)
         }
@@ -145,7 +145,7 @@ function handleAddVolToProject(e, displayedV) {
             })
             .then((r) => r.json())
             .then((newAdd) => { 
-            newAdd = rescue.animals.find(a => a.id === animal_id)
+            newAdd = displayedAnimals.find(a => a.id === animal_id)
             setProjAnimals([...projAnimals, newAdd])
             setDisplayedAddAnimals(displayedAddAnimals.filter(daa => daa.id !== animal_id))
             })
