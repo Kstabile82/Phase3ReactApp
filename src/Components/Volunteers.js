@@ -51,7 +51,6 @@ function Volunteers({ rescue, assignNew }) {
          .then((r) => r.json())
          .then(newAdd => setDisplayedVolunteers([...displayedVolunteers, newAdd]));    
      }    
-     console.log(displayedVolunteers)
 
      function onDeleteVolunteer(id) {
         const updatedVolunteers = rescue.volunteers.filter((volunteer) => volunteer.id !== id);

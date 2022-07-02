@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './App.css';
 import Rescue from './Components/Rescue' 
-import AddNewRescue from './Components/AddNewRescue'
 import image from './AnimalRescue.jpg'
 
 function App() {
@@ -103,7 +102,6 @@ function handleSubmit(e) {
                 onChange={(e) => setLocation(e.target.value)}/>
                 <button>Submit</button>
             </form> : null }
-            {/* {submitted ? <AddNewRescue rescues={rescues} setRescues={setRescues} newRescue={newRescue} /> : null}  */}
      
     </div>
    );
