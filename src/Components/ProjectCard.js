@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-function ProjectCard({ projCard, setProjCard, setClosed, closed, rescue, onDeleteProject, displayedVolunteers, displayedAnimals }) {
+function ProjectCard({ projCard, setProjCard, setClosed, closed, rescue, onDeleteProject, displayedVolunteers, displayedAnimals, displayedProjects }) {
     const [updatedProject, setUpdatedProject] = useState({})
     const [clickedUpdate, setClickedUpdate] = useState(false)
     const [assignNew, setAssignNew] = useState("")

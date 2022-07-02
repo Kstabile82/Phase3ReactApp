@@ -9,6 +9,7 @@ function Rescue({ rescue, setRescue, setLoggedOut }) {
     const [clicked, setClicked] = useState("")
     const [displayedVolunteers, setDisplayedVolunteers] = useState([])
     const [displayedAnimals, setDisplayedAnimals] = useState([])
+    const [displayedProjects, setDisplayedProjects] = useState([])
 
     useEffect(() => {
         fetch(`http://localhost:9292/rescues/${rescue.id}`)
@@ -31,6 +32,13 @@ function Rescue({ rescue, setRescue, setLoggedOut }) {
         .then((r) => r.json())
         .then((animals) => setDisplayedAnimals(animals));
     }, []);
+
+    useEffect(() => {
+        fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
+        .then((r) => r.json())
+        .then((rescueProjects) => setDisplayedProjects(rescueProjects));
+      }, []);   
+
 // function handleDeleteRescue(id) {
 //   const updatedRescue = rescues.filter((rescue) => rescue.id !== id);
 //   setRescues(updatedRescue);
@@ -62,7 +70,7 @@ function handleLogOut(e) {
             <button onClick={handleLogOut}>Log Out</button>
             {clicked === "Volunteers" ? <Volunteers rescue={rescueinfo} displayedVolunteers={displayedVolunteers} setDisplayedVolunteers={setDisplayedVolunteers} /> : null }
             {clicked === "Animals" ? <Animals rescue={rescueinfo} displayedAnimals={displayedAnimals} setDisplayedAnimals={setDisplayedAnimals}/> : null }
-            {clicked === "Project Organizer" ? <Projects rescue={rescueinfo} displayedVolunteers={displayedVolunteers} displayedAnimals={displayedAnimals}/> : null }
+            {clicked === "Project Organizer" ? <Projects rescue={rescueinfo} displayedVolunteers={displayedVolunteers} displayedAnimals={displayedAnimals} displayedProjects={displayedProjects} setDisplayedProjects={setDisplayedProjects}/> : null }
             <br>
             </br>
         </div>

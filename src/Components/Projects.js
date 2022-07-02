@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
 
-function Projects({ rescue, displayedVolunteers, displayedAnimals }) {
-const [displayedProjects, setDisplayedProjects] = useState([])
+function Projects({ rescue, displayedProjects, setDisplayedProjects, displayedVolunteers, displayedAnimals }) {
 const [project, setProject] = useState({})
 const [closed ,setClosed] = useState(false)
 const [add, setAdd] = useState(false)
@@ -13,12 +12,6 @@ const [filterType, setFilterType] = useState("")
 let projMatchArray = []
 let typeMatches = [];
 const [projCard, setProjCard] = useState("")
-
-useEffect(() => {
-  fetch(`http://localhost:9292/rescues/${rescue.id}/projects`)
-  .then((r) => r.json())
-  .then((rescueProjects) => setDisplayedProjects(rescueProjects));
-}, []);   
 
    function handleClick(e) {
             e.preventDefault();
@@ -47,11 +40,11 @@ useEffect(() => {
           }),
           })
           .then((r) => r.json())
-          .then(newProj => setDisplayedProjects([...rescue.projects, newProj])); 
+          .then(newProj => setDisplayedProjects([...displayedProjects, newProj])); 
 
     }
     function onDeleteProject(id) {
-      const updatedProjects = rescue.projects.filter((project) => project.id !== id);
+      const updatedProjects = displayedProjects((project) => project.id !== id);
       setDisplayedProjects(updatedProjects)
      }
 
@@ -63,7 +56,7 @@ useEffect(() => {
           setFilterType(filtertype)
       }
   } 
-  projMatchArray = rescue.projects;
+  projMatchArray = displayedProjects;
 
   function handleSubmitProjectFilter(e) {
       e.preventDefault(); 
