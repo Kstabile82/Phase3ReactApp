@@ -1,71 +1,26 @@
-# Getting Started with Create React App
+Animal Rescue
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Description A tool for animal rescues that allows them to keep track of their volunteers, animals and projects, with ability to filter and sort each by certain characteristics and update records. The Project component further enables users to assign volunteers and animals to various projects and easily view who is working on what. This is a React front end and Sinatra back end, with data converted to JSON.
 
-## Available Scripts
+Usage
 
-In the project directory, you can run:
+A user should see a log in screen with the option to enter a rescue ID or create a new rescue. If the create a new rescue button is clicked, it should populate an input form asking for information, and submission will fire an event listener and make a request to add this rescue on the back end. If a rescue ID is correctly submitted, or a new rescue is created, users are taken to a welcome screen with buttons for Volunteers, Animals and Projects, as well as a Log Out button that would take them back to the initial screen if clicked. 
 
-### `npm start`
+The Animal, Volunteer and Project buttons should each pull up a list of the respective instances when clicked. Clicking on an individual Animal or Volunteer's name, or Project title, will render a "card" that displays that instance's basic information, with the option to update it, delete it or close the card.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Additionally, each of those components/lists will have the option to sort and filter by various characteristics -- location, duration of time with the rescue, newest to oldest, etc. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The Projects cards go a little more in-depth by showing which volunteers are working on the project, and which animals are assigned to it. Clicking update on the project card will allow animals and volunteers to be easily deleted by rendering a delete button right next to the name. It will also render buttons to assign new animals or assign new volunteers, each of which, when clicked, will pull up the respective list of names that are not already assigned to that project, with an add button next to them. The add and delete buttons will trigger event listeners that send delete and post requests to the back end, while updating the input and select forms (i.e. the project title, animal age, etc.) send a patch request that updates that project. 
 
-### `npm test`
+Support For support, please email karina.stabile@gmail.com
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Roadmap
 
-### `npm run build`
+Add options to view volunteer and animal projects from the volunteer and animal components/cards.
+Add "Volunteer Talents" join table so volunteers can have multiple talents, and then upgrade update project card option to filter the listed volunteers based on that specific project's needs. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Update "create new" forms to have stricter requirements on location and talent formatting, or show the already existing options in the data set as a first option to choose from, to avoid duplicates with different wording (i.e. volunteers that are from "Long Island" vs. "Long Island, NY")
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Add Animal or Volunteer photo to their card (link to a Petfinder or Facebook profile)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# Phase3ReactApp
+Contributing I am open to contributions, please email me to inquire. Any editors must have React and JSON enabled.
