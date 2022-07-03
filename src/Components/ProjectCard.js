@@ -42,12 +42,10 @@ useEffect(() => {
     })
 
 }, []);
-
 function handleUpdateProject(e){
    e.preventDefault();
    setClickedUpdate(true)
 }
-
 function handleDeleteProject(e){
  e.preventDefault();
     fetch(`http://localhost:9292/projects/${projCard.id}`, {
@@ -99,34 +97,28 @@ function handleDeletePA(e, pa) {
         setDisplayedAddAnimals([...displayedAddAnimals, animalToDelete])
     })
 }
-
 function handleAssignAnimal(e) {
     e.preventDefault();
     setAssignNewAnimal("Animal")
-    displayedAnimals.map(anim => {
-        if (!animalArr.includes(anim.id)) {
-            displayedPAsToAddArr.push(anim)
-        }
-    })
-    setDisplayedAddAnimals(displayedPAsToAddArr) 
+    projAnimals.map(pa => displayedPAsToAddArr.push(pa.id))
+    setDisplayedAddAnimals(displayedAnimals.filter(da => !displayedPAsToAddArr.includes(da.id)))
+    // displayedAnimals.map(anim => {
+    //     if (!animalArr.includes(anim.id)) {
+    //         displayedPAsToAddArr.push(anim)
+    //     }
+    // })
+    // setDisplayedAddAnimals(displayedPAsToAddArr) 
 }
-
 function handleAssignVolunteer(e) {
     e.preventDefault();
     setAssignNew("Volunteer")
-    displayedVolunteers.map(vol => {
-        if (!volArr.includes(vol.id)) {
-            displayedPVsToAddArr.push(vol)
-        }
-    })
-    setDisplayedAddVols(displayedPVsToAddArr) 
+    projVols.map(pv => displayedPVsToAddArr.push(pv.id))
+    setDisplayedAddVols(displayedVolunteers.filter(dv => !displayedPVsToAddArr.includes(dv.id)))
 }
-
 function handleAddVolToProject(e, displayedV) {
     e.preventDefault();
     let volunteer_id = displayedV.id
     let project_id = projCard.id
-
     if (projVols.length === 0 || !volArr.includes(volunteer_id)) {
         fetch(`http://localhost:9292/project_volunteers`, {
             method: "POST",
@@ -146,6 +138,7 @@ function handleAddVolToProject(e, displayedV) {
             })
         }
  }
+
  function handleAddAnimalToProject(e, displayedA) {
     e.preventDefault();
     let animal_id = displayedA.id
@@ -169,7 +162,6 @@ function handleAddVolToProject(e, displayedV) {
             })
         }
  }
-
 return (
         <div className="projectcard" style={{display: closed === true ? 'none' : 'visible' }}>
             <div key={projCard.id}>Title: {projCard.title}
