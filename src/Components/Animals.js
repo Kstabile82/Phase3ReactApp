@@ -7,6 +7,7 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
     const [closedAnimal, setClosedAnimal] = useState(false)
     const [checked, setChecked] = useState(false)
     const [submitted, setSubmitted] = useState(false)
+    const [newAnimalSubmitted, setNewAnimalSubmitted] = useState()
     // const [displayedAnimalsToFilter, setDisplayedAnimalsToFilter] = useState(displayedAnimals)
     let filtertype;
     let filtersex; 
@@ -23,6 +24,11 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
     let typeMatches;
     let adoptMatches;
     let breedMatches;
+    let name; 
+    let age;
+    let sex;
+    let kind;
+    let color;
 
    function handleClick(a, e){
        setAnimal(a)
@@ -36,11 +42,29 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
     const updatedAnimals = displayedAnimals.filter((animal) => animal.id !== id);
     setDisplayedAnimals(updatedAnimals)
    }
+   function handleChange(e) {
+       e.preventDefault();
+       if (e.target.name === "name") {
+        name = e.target.value
+       } 
+       if (e.target.name === "color") {
+        color = e.target.value
+       }
+       if (e.target.name === "age") {
+         age = e.target.value  
+       }
+       if (e.target.name === "type") {
+        kind = e.target.value
+       }
+       if (e.target.name === "sex") {
+        sex = e.target.value
+       }
+   }
    function handleSubmit(e) {
        e.preventDefault();
-       let name = e.target.firstChild.value;
-       let sex = e.target.firstChild.nextSibling.value;
-       let color = e.target.firstChild.nextSibling.nextSibling.value;
+    //    let name = e.target.firstChild.value;
+    //    let sex = e.target.firstChild.nextSibling.value;
+    //    let color = e.target.firstChild.nextSibling.nextSibling.value;
        fetch(`http://localhost:9292/animals`, {
         method: "POST",
         headers: {
@@ -50,14 +74,17 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
             name,
             sex, 
             color,
+            age,
+            kind,
             rescue_id: rescue.id, 
             project_animals: [],
             adoption_status: false,
-            kind: "Rabbit"
         }),
         })
         .then((r) => r.json())
-        .then(newAdd => setDisplayedAnimals([...displayedAnimals, newAdd]));  
+        .then(newAdd => {
+            setDisplayedAnimals([...displayedAnimals, newAdd])
+        });  
         //problem - animal adds on backend, but doesn't appear on the front end until I refresh the whole App
     }    
     function handleChangeFilter(e) {
@@ -189,9 +216,30 @@ return (
             {animal.id === undefined || closedAnimal ? null : <AnimalCard animal={animal} onDeleteAnimal={onDeleteAnimal} setAnimal={setAnimal} closedAnimal={closedAnimal} setClosedAnimal={setClosedAnimal} displayedAnimals={displayedAnimals} /> }
             <button style={{display: assignNew === "Animal" ? 'none' : 'visible' }} onClick={handleAdd}>Add New Animal</button>
             { add ? <form onSubmit={handleSubmit}>
-                <input name="name" placeholder="Name"/>
-                <input name="sex" placeholder="Sex"/>
-                <input name="color" placeholder="Color"/>
+                <input name="name" placeholder="Name" onChange={handleChange}/>
+                <input name="color" placeholder="Color" onChange={handleChange}/>
+                <select name="type" onChange={handleChange}>Type
+                    <option value="" hidden>Type</option>
+                    <option>Dog</option>
+                    <option>Cat</option>
+                    <option>Rabbit</option>
+                    <option>Other</option>
+                    <option>All</option>
+                </select>
+                <select name="sex" onChange={handleChange}>Sex
+                    <option value="" hidden>Sex</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>All</option>
+                </select>
+                <select name="age" onChange={handleChange}>
+                    <option value="" hidden>Age</option>
+                    <option>Baby</option>
+                    <option>Young</option>
+                    <option>Adult</option>
+                    <option>Senior</option>
+                    <option>All</option>
+                </select>
                 <button>Submit</button>
             </form> : null }
         </div>
