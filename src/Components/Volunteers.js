@@ -16,6 +16,10 @@ function Volunteers({ rescue, displayedVolunteers, setDisplayedVolunteers, assig
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;
+    const [locations, setLocations] = useState(([...new Set(displayedVolunteers.map(dv => dv.location))]))
+    const [talents, setTalents] = useState(([...new Set(displayedVolunteers.map(dv => dv.talents))]))
+
+    console.log(talents)
 
    function handleClick(e) {
     e.preventDefault();
@@ -110,26 +114,13 @@ return (
             <form onSubmit={handleSubmitVolFilter}>
             <select name="location" onChange={handleFilterVolChange}>
                      <option value="" hidden>Location</option>
-                     <option>Long Island</option>
-                     <option>Brooklyn</option>
-                     <option>Queens</option>
-                     <option>Manhattan</option>
-                     <option>New Jersey</option>
-                     <option>Bronx</option>
-                     <option>Staten Island</option>
-                     <option>Westchester</option>
                      <option>All</option>
+                     {locations.map(l => <option>{l}</option>)}
                 </select>
                 <select name="talent" onChange={handleFilterVolChange}>
                     <option value="" hidden>Talent</option>
-                     <option>Website</option>
-                     <option>Social Media</option>
-                     <option>Fundraising</option>
-                     <option>Fostering</option>
-                     <option>Rescuing</option>
-                     <option>Event Management</option>
-                     <option>Office Management</option>
                      <option>All</option>
+                     {talents.map(t => <option>{t}</option>)}
                 </select>
                 <button>Submit</button>
             </form>
