@@ -1,6 +1,6 @@
 Animal Rescue
 
-Description A tool for animal rescues that allows them to keep track of their volunteers, animals and projects, with ability to filter and sort each by certain characteristics and update records. The Project component further enables users to assign volunteers and animals to various projects and easily view who is working on what. This is a React front end and Sinatra back end, with data converted to JSON.
+This is the front end for an animal rescues app that allows them to keep track of their volunteers, animals and projects, with ability to filter and sort each by certain characteristics and update records. The Project component further enables users to assign volunteers and animals to various projects and easily view who is working on what. This is a React front end and Sinatra back end, with data converted to JSON.
 
 Usage
 
