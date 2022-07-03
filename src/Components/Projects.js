@@ -87,17 +87,21 @@ function sortProjects(e) {
              <input id="sortdate" type="checkbox" onChange={sortProjects} />
             </label>
             <br></br>
+            {/* <form onSubmit={handleSubmitProjectFilter}> */}
             <form onSubmit={handleSubmitProjectFilter}>
+
             <select name="type" onChange={handleFilterProjectChange}>
                      <option value="" hidden>Type</option>
-                     <option>Website</option>
+                     {/* <option>Website</option>
                      <option>Fundraiser</option>
                      <option>Event</option>
                      <option>Rescue Effort</option>
                      <option>Social Media</option>
                      <option>Adoption Screening</option>
-                     <option>Fostering</option>
+                     <option>Fostering</option> */}
                      <option>All</option>
+                     {displayedProjects.map(dp => <option>{dp.proj_type}</option>)}
+
                 </select>
                 <button>Submit</button>
             </form>

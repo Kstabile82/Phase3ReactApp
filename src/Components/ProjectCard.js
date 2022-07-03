@@ -102,12 +102,6 @@ function handleAssignAnimal(e) {
     setAssignNewAnimal("Animal")
     projAnimals.map(pa => displayedPAsToAddArr.push(pa.id))
     setDisplayedAddAnimals(displayedAnimals.filter(da => !displayedPAsToAddArr.includes(da.id)))
-    // displayedAnimals.map(anim => {
-    //     if (!animalArr.includes(anim.id)) {
-    //         displayedPAsToAddArr.push(anim)
-    //     }
-    // })
-    // setDisplayedAddAnimals(displayedPAsToAddArr) 
 }
 function handleAssignVolunteer(e) {
     e.preventDefault();
@@ -138,7 +132,6 @@ function handleAddVolToProject(e, displayedV) {
             })
         }
  }
-
  function handleAddAnimalToProject(e, displayedA) {
     e.preventDefault();
     let animal_id = displayedA.id
