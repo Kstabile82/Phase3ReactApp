@@ -100,12 +100,14 @@ function handleDeletePA(e, pa) {
 function handleAssignAnimal(e) {
     e.preventDefault();
     setAssignNewAnimal("Animal")
+    setAssignNew("")
     projAnimals.map(pa => displayedPAsToAddArr.push(pa.id))
     setDisplayedAddAnimals(displayedAnimals.filter(da => !displayedPAsToAddArr.includes(da.id)))
 }
 function handleAssignVolunteer(e) {
     e.preventDefault();
     setAssignNew("Volunteer")
+    setAssignNewAnimal("")
     projVols.map(pv => displayedPVsToAddArr.push(pv.id))
     setDisplayedAddVols(displayedVolunteers.filter(dv => !displayedPVsToAddArr.includes(dv.id)))
 }
