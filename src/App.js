@@ -54,6 +54,10 @@ function handleSubmit(e) {
       setSubmitted(true)
     })
 }
+function onDeleteRescue(id) {
+  const updatedRescues = rescues.filter((rescue) => rescue.id !== id);
+  setRescues(updatedRescues)
+ }
 // function AddNewRescue(e) {
 //   e.preventDefault();
 //   fetch("http://localhost:9292/rescues", {
@@ -85,7 +89,7 @@ function handleSubmit(e) {
             : 
             <div>
             {/* {rescue && !loggedOut ? <Rescue rescue={rescue} setRescue={setRescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut} */}
-            <Rescue rescue={rescue} setRescue={setRescue} setLoggedOut={setLoggedOut}/> 
+            <Rescue rescue={rescue} setRescue={setRescue} setLoggedOut={setLoggedOut} onDeleteRescue={onDeleteRescue}/> 
              </div> } 
             { add && submitted === false ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>
                 <input 

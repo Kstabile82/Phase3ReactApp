@@ -43,7 +43,9 @@ let typeMatches = [];
           .then(newProj => setDisplayedProjects([...displayedProjects, newProj])); 
     }
     function onDeleteProject(id) {
-      const updatedProjects = displayedProjects((project) => project.id !== id);
+      // const updatedProjects = displayedProjects((project) => project.id !== id);
+      const updatedProjects = displayedProjects.filter((project) => project.id !== id);
+
       setDisplayedProjects(updatedProjects)
      }
 
