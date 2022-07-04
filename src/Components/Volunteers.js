@@ -11,8 +11,8 @@ function Volunteers({ rescue, displayedVolunteers, setDisplayedVolunteers, assig
     const [volSubmitted, setVolSubmitted] = useState(false)
     let filterlocation;
     let filtertalent;
-    const [filterLocation, setFilterLocation] = useState("")
-    const [filterTalent, setFilterTalent] = useState("")
+    const [filterLocation, setFilterLocation] = useState("All")
+    const [filterTalent, setFilterTalent] = useState("All")
     let volMatchArray = []
     let locationMatches = [];
     let talentMatches;

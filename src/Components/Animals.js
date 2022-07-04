@@ -13,8 +13,8 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
     let filtersex; 
     let filterage;
     let filteradopt;
-    const [filterType, setFilterType] = useState("")
-    const [filterSex, setFilterSex] = useState("")
+    const [filterType, setFilterType] = useState("All")
+    const [filterSex, setFilterSex] = useState("All")
     const [filterAge, setFilterAge] = useState("")
     const [filterAdopt, setFilterAdopt] = useState(false)
     const [newProjAnimal, setNewProjAnimal] = useState([])
@@ -127,7 +127,7 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
         else {
             sexMatches = animalMatchArray.filter(animal => animal.sex === filterSex)  
         }
-        if (filterAdopt === undefined || filterAdopt == "All") {
+        if (filterAdopt === undefined) {
             adoptMatches = sexMatches;
         }
         else {
@@ -205,7 +205,6 @@ return (
                     <option value="" hidden>Adopted</option>
                      <option>True</option>
                      <option>False</option>
-                     <option>All</option>
                 </select>
                 <button>Submit</button>
             </form>
