@@ -5,7 +5,6 @@ function Volunteers({ rescue, displayedVolunteers, setDisplayedVolunteers, assig
     const [volunteer, setVolunteer] = useState({})
     const [add, setAdd] = useState(false)
     const [closedVol, setClosedVol] = useState(false)
-    // const [displayedVolunteers, setDisplayedVolunteers] = useState([]) 
     const [displayedPVs, setDisplayedPVs] = useState([])
     const [checked, setChecked] = useState(false)
     const [volSubmitted, setVolSubmitted] = useState(false)

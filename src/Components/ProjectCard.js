@@ -79,7 +79,6 @@ function handleEdit(e){
      })
      .then((r) => r.json())
      .then(() => {
-        //  setProjVols(projCard.volunteers.filter(pv => pv.id !== pvToDelete.volunteer_id))
         setProjVols(projVols.filter(pv => pv.id !== pvToDelete.volunteer_id))
          setDisplayedAddVols([...displayedAddVols, volToDelete])
      })

@@ -43,7 +43,6 @@ let typeMatches = [];
           .then(newProj => setDisplayedProjects([...displayedProjects, newProj])); 
     }
     function onDeleteProject(id) {
-      // const updatedProjects = displayedProjects((project) => project.id !== id);
       const updatedProjects = displayedProjects.filter((project) => project.id !== id);
 
       setDisplayedProjects(updatedProjects)
@@ -94,13 +93,6 @@ function sortProjects(e) {
 
             <select name="type" onChange={handleFilterProjectChange}>
                      <option value="" hidden>Type</option>
-                     {/* <option>Website</option>
-                     <option>Fundraiser</option>
-                     <option>Event</option>
-                     <option>Rescue Effort</option>
-                     <option>Social Media</option>
-                     <option>Adoption Screening</option>
-                     <option>Fostering</option> */}
                      <option>All</option>
                      {displayedProjects.map(dp => <option>{dp.proj_type}</option>)}
 

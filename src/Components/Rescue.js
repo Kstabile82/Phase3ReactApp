@@ -39,21 +39,6 @@ function Rescue({ rescue, setRescue, setLoggedOut, onDeleteRescue }) {
         .then((rescueProjects) => setDisplayedProjects(rescueProjects));
       }, []);   
 
-// function handleDeleteRescue(id) {
-//   const updatedRescue = rescues.filter((rescue) => rescue.id !== id);
-//   setRescues(updatedRescue);
-// }
-
-// function handleUpdateRescue(updatedRescue) {
-//   const updatedRescue = rescues.map((rescue) => {
-//     if (rescue.id === updatedRescue.id) {
-//       return updatedRescue;
-//     } else {
-//       return rescue;
-//     }
-//   });
-//   setRescues(updatedRescues);
-// }
 function handleLogOut(e) {
     e.preventDefault();
     setRescue("")

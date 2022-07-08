@@ -35,8 +35,6 @@ function handleShowAddForm(e) {
 }
 function handleSubmit(e) {
   e.preventDefault();
-  // setSubmitted(true);
-  // setNewRescue({name: name, location: location})
   fetch("http://localhost:9292/rescues", {
     method: "POST",
     headers: {
@@ -58,18 +56,6 @@ function onDeleteRescue(id) {
   const updatedRescues = rescues.filter((rescue) => rescue.id !== id);
   setRescues(updatedRescues)
  }
-// function AddNewRescue(e) {
-//   e.preventDefault();
-//   fetch("http://localhost:9292/rescues", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(newRescue)
-//     })
-//     .then((r) => r.json())
-//     .then(newAddition => setRescues([...rescues, newAddition]));
-// }
    return (
     <div>
       <img className="pic" src={image} height={300} width={1200}></img>
@@ -88,7 +74,6 @@ function onDeleteRescue(id) {
             </div>
             : 
             <div>
-            {/* {rescue && !loggedOut ? <Rescue rescue={rescue} setRescue={setRescue} loggedOut={loggedOut} setLoggedOut={setLoggedOut} */}
             <Rescue rescue={rescue} setRescue={setRescue} setLoggedOut={setLoggedOut} onDeleteRescue={onDeleteRescue}/> 
              </div> } 
             { add && submitted === false ? <form onSubmit={handleSubmit} style={{display: loggedOut ? 'visible' : 'none' }}>

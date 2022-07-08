@@ -8,7 +8,6 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
     const [checked, setChecked] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [newAnimalSubmitted, setNewAnimalSubmitted] = useState()
-    // const [displayedAnimalsToFilter, setDisplayedAnimalsToFilter] = useState(displayedAnimals)
     let filtertype;
     let filtersex; 
     let filterage;
@@ -62,10 +61,7 @@ function Animals({ rescue, assignNew, project, displayedAnimals, setDisplayedAni
    }
    function handleSubmit(e) {
        e.preventDefault();
-    //    let name = e.target.firstChild.value;
-    //    let sex = e.target.firstChild.nextSibling.value;
-    //    let color = e.target.firstChild.nextSibling.nextSibling.value;
-       fetch(`http://localhost:9292/animals`, {
+          fetch(`http://localhost:9292/animals`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
